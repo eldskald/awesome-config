@@ -1,3 +1,4 @@
+.luarc.json
 default_apps.lua
 startup_apps.lua
 
