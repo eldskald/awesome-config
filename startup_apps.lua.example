@@ -1,0 +1,6 @@
+Apps you want to start up with the system. It's an array of strings of shell
+commands. Just add any and it shall be called when you log into your user.
+
+return {
+  'some command to open an app'
+}

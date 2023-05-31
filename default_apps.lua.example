@@ -1,0 +1,21 @@
+Default apps opened by some widgets and keybindings. Put any shell command
+and they should launch. Separated into system defaults, for apps you usually
+don't mess too much around with and regular defaults for apps you do.
+
+return {
+  -- System defaults
+  launcher = 'rofi -modi drun -show drun',
+  network_manager = 'nm-connection-editor',
+  power_manager = 'xfce4-power-manager',
+  screenshot = 'maim -s | xclip -selection clipboard -t image/png',
+  lock = 'i3lock',
+
+  -- Regular defaults
+  terminal = 'kitty',
+  web_browser = 'brave-browser',
+  file_browser = 'kitty zsh -c '
+    .. 'NNN_FIFO=\'/tmp/nnn.fifo\' '
+    .. 'NNN_TRASH=1'
+    .. 'NNN_PLUG=\'p:preview-tui;j:autojump;f:fzcd;d:dragdrop\' '
+    .. 'nnn -eHPp',
+}
