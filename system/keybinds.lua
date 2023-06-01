@@ -314,4 +314,5 @@ keys.globalkeys = gears.table.join(
   end, { description = 'move to next screen', group = 'client' })
 )
 
-return keys
+root.keys(keys.globalkeys)
+root.buttons(keys.desktopbuttons)
