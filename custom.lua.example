@@ -1,0 +1,46 @@
+-- Needs to return three tables: default_apps, custom_keybinds and
+-- startup_apps.
+
+-- This one needs all of these present keys. Will throw an error
+-- if one is not found. You can add more to use on the next two
+-- tables, they won't be called on the project files.
+local default_apps = {
+
+  -- System defaults
+  launcher = 'rofi -modi drun -show drun',
+  network_manager = 'nm-connection-editor',
+  power_manager = 'xfce4-power-manager',
+  screenshot = 'maim -s | xclip -selection clipboard -t image/png',
+  lock = 'i3lock',
+
+  -- Regular defaults
+  terminal = 'kitty',
+  web_browser = 'brave-browser',
+  file_browser = 'thunar'
+}
+
+-- This one gets added to root.keys. See system/keybindings.lua for 
+-- more examples. It's an array of keybindings.
+local awful = require('awful')
+local modkey = 'Mod4'
+local custom_keybinds = {
+
+  -- Launch calculator
+  awful.key({ modkey }, 'c', function()
+    awful.spawn('gnome-calculator')
+  end, { description = 'launch calculator', group = 'launcher' }),
+
+  -- Launch notepad
+  awful.key({ modkey }, 'x', function()
+    awful.spawn('gedit')
+  end, { description = 'launch notepad', group = 'launcher' }),
+}
+
+-- This one is an array of shell command strings. It gets called at
+-- the end of rc.lua with awful.spawn.with_shell().
+local startup_apps = {
+  'unclutter',
+  'nitrogen --restore',
+}
+
+return {default_apps, custom_keybinds, startup_apps}

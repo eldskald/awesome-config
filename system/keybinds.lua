@@ -5,9 +5,8 @@ local naughty = require('naughty')
 local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
 
-local apps = require('default_apps')
+local custom = require('custom').custom_keybinds
 
--- This file's return table
 local keys = {}
 
 -- Mod key definition
@@ -135,25 +134,25 @@ keys.globalkeys = gears.table.join(
   end, { description = 'toggle exit screen', group = 'system' }),
 
   awful.key({}, 'Print', function()
-    os.execute(apps.screenshot)
+    os.execute(custom.apps.screenshot)
   end, { description = 'take a screenshot', group = 'system' }),
 
   -- Launchers
 
   awful.key({ modkey }, 'Return', function()
-    awful.spawn(apps.terminal)
+    awful.spawn(custom.apps.terminal)
   end, { description = 'open a terminal', group = 'launcher' }),
 
   awful.key({ modkey }, 'd', function()
-    awful.spawn(apps.launcher)
+    awful.spawn(custom.apps.launcher)
   end, { description = 'application launcher', group = 'launcher' }),
 
   awful.key({ modkey }, 'w', function()
-    awful.spawn(apps.web_browser)
+    awful.spawn(custom.apps.web_browser)
   end, { description = 'launch web browser', group = 'launcher' }),
 
   awful.key({ modkey }, 'e', function()
-    awful.spawn(apps.file_browser)
+    awful.spawn(custom.apps.file_browser)
   end, { description = 'launch file browser', group = 'launcher' }),
 
   -- Client
@@ -311,7 +310,11 @@ keys.globalkeys = gears.table.join(
   -- Move to next screen
   awful.key({ modkey, 'Shift' }, 's', function(c)
     c:move_to_screen()
-  end, { description = 'move to next screen', group = 'client' })
+  end, { description = 'move to next screen', group = 'client' }),
+
+  -- Custom keybindings
+
+  unpack(custom.custom_keybinds)
 )
 
 root.keys(keys.globalkeys)
