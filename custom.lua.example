@@ -1,9 +1,7 @@
 -- Needs to return three tables: default_apps, custom_keybinds and
 -- startup_apps.
 
--- This one needs all of these present keys. Will throw an error
--- if one is not found. You can add more to use on the next two
--- tables, they won't be called on the project files.
+-- Very self explanatory. Will be called by the keybindings and widgets.
 local default_apps = {
 
   -- System defaults
@@ -11,7 +9,6 @@ local default_apps = {
   network_manager = 'nm-connection-editor',
   power_manager = 'xfce4-power-manager',
   screenshot = 'maim -s | xclip -selection clipboard -t image/png',
-  lock = 'i3lock',
 
   -- Regular defaults
   terminal = 'kitty',
