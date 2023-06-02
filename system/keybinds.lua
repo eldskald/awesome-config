@@ -171,6 +171,10 @@ keys.globalkeys = gears.table.join(
     c:raise()
   end, { description = '(un)maximize', group = 'client' }),
 
+  awful.key({ modkey }, 't', function(c)
+    awful.titlebar.toggle(c)
+  end, { description = 'toggle title bar', group = 'client' }),
+
   awful.key({ modkey }, 'n', function(c)
     c.minimized = true
   end, { description = 'minimize', group = 'client' }),

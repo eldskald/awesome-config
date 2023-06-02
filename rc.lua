@@ -2,6 +2,7 @@ pcall(require, 'luarocks.loader')
 
 local gears = require('gears')
 local awful = require('awful')
+
 local custom = require('custom')
 
 -- Initial setup
@@ -12,10 +13,11 @@ awful.layout.layouts = {
   awful.layout.suit.float,
 }
 
--- Importing system files
+-- Importing project files
 require('system.errors')
 require('system.clients')
 require('system.keybinds')
+require('theme.clients')
 
 -- Startup system
 local dir = gears.filesystem.get_configuration_dir()
