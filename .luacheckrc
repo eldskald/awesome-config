@@ -20,3 +20,7 @@ globals = {
   'root',
   'client',
 }
+
+exclude_files = {
+  'widgets/*',
+}

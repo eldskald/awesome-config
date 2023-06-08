@@ -6,9 +6,9 @@ local custom = require('custom')
 
 awful.terminal = custom.default_apps.terminal
 awful.layout.layouts = {
-  awful.layout.suit.tile,
-  awful.layout.suit.tile.bottom,
-  awful.layout.suit.float,
+    awful.layout.suit.tile,
+    awful.layout.suit.tile.bottom,
+    awful.layout.suit.float,
 }
 
 require('system.errors')
@@ -22,5 +22,5 @@ require('theme.clients')
 local dir = gears.filesystem.get_configuration_dir()
 awful.spawn.with_shell('picom --config ' .. dir .. '/system/picom.conf')
 for _, app in ipairs(custom.startup_apps) do
-  awful.spawn.with_shell(app)
+    awful.spawn.with_shell(app)
 end
