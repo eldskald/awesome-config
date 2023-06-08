@@ -24,3 +24,4 @@ Then, create your `custom.lua` file with your default settings. Use `custom.lua.
 
 I made it based on [WillPower3309](https://github.com/WillPower3309/awesome-dotfiles), [awesome-copycats](https://github.com/lcpz/awesome-copycats) and [raven2cz](https://github.com/raven2cz/awesomewm-config) config files.
 
+All widgets are from [WillPower3309](https://github.com/WillPower3309/awesome-dotfiles).

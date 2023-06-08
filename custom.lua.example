@@ -1,7 +1,14 @@
--- Needs to return three tables: default_apps, custom_keybinds and
+-- Needs to return four tables: theme, default_apps, custom_keybinds and
 -- startup_apps.
 
--- Very self explanatory. Will be called by the keybindings and widgets.
+-- Theme has properties to make it easy to change appearance.
+-- Very self explanatory.
+local theme = {
+  font = 'Terminus 10',
+  topbar_height = 32
+}
+
+-- Also self explanatory. Will be called by the keybindings and widgets.
 local default_apps = {
 
   -- System defaults
@@ -40,4 +47,4 @@ local startup_apps = {
   'nitrogen --restore',
 }
 
-return {default_apps, custom_keybinds, startup_apps}
+return {theme, default_apps, custom_keybinds, startup_apps}

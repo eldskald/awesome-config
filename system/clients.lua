@@ -1,4 +1,5 @@
 local awful = require('awful')
+local beautiful = require('beautiful')
 
 -- Handling clients
 client.connect_signal('manage', function(c)
@@ -24,3 +25,23 @@ end)
 
 -- Reload config when screen geometry changes
 screen.connect_signal('property::geometry', awesome.restart)
+
+-- Rules
+local keys = require('system.keybinds')
+awful.rules.rules = {
+  {
+    rule = {},
+    properties = {
+      border_width = beautiful.border_width,
+      border_color = beautiful.border_normal,
+      callback = awful.client.setslave,
+      focus = awful.client.focus.filter,
+      raise = true,
+      keys = keys.clientkeys,
+      buttons = keys.clientbuttons,
+      screen = awful.screen.preferred,
+      placement = awful.placement.no_offscreen + awful.placement.no_overlap,
+      size_hints_honor = false
+    }
+  }
+}

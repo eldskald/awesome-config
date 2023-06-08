@@ -155,6 +155,13 @@ keys.globalkeys = gears.table.join(
     awful.spawn(custom.apps.file_browser)
   end, { description = 'launch file browser', group = 'launcher' }),
 
+  -- Custom keybindings
+
+  unpack(custom.custom_keybinds)
+)
+
+keys.clientkeys = gears.table.join(
+
   -- Client
 
   -- Client control
@@ -314,12 +321,10 @@ keys.globalkeys = gears.table.join(
   -- Move to next screen
   awful.key({ modkey, 'Shift' }, 's', function(c)
     c:move_to_screen()
-  end, { description = 'move to next screen', group = 'client' }),
-
-  -- Custom keybindings
-
-  unpack(custom.custom_keybinds)
+  end, { description = 'move to next screen', group = 'client' })
 )
 
-root.keys(keys.globalkeys)
-root.buttons(keys.desktopbuttons)
+-- root.keys(keys.globalkeys)
+-- root.buttons(keys.desktopbuttons)
+
+return keys
