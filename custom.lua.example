@@ -4,23 +4,23 @@
 -- Theme has properties to make it easy to change appearance.
 -- Very self explanatory.
 local theme = {
-  font = 'Terminus 10',
-  topbar_height = 32
+    font = 'Terminus 10',
+    topbar_height = 32
 }
 
 -- Also self explanatory. Will be called by the keybindings and widgets.
 local default_apps = {
 
-  -- System defaults
-  launcher = 'rofi -modi drun -show drun',
-  network_manager = 'nm-connection-editor',
-  power_manager = 'xfce4-power-manager',
-  screenshot = 'maim -s | xclip -selection clipboard -t image/png',
+    -- System defaults
+    launcher = 'rofi -modi drun -show drun',
+    network_manager = 'nm-connection-editor',
+    power_manager = 'xfce4-power-manager',
+    screenshot = 'maim -s | xclip -selection clipboard -t image/png',
 
-  -- Regular defaults
-  terminal = 'kitty',
-  web_browser = 'brave-browser',
-  file_browser = 'thunar'
+    -- Regular defaults
+    terminal = 'kitty',
+    web_browser = 'brave-browser',
+    file_browser = 'thunar'
 }
 
 -- This one gets added to root.keys. See system/keybindings.lua for 
@@ -29,27 +29,27 @@ local awful = require('awful')
 local modkey = 'Mod4'
 local custom_keybinds = {
 
-  -- Launch calculator
-  awful.key({ modkey }, 'c', function()
-    awful.spawn('gnome-calculator')
-  end, { description = 'launch calculator', group = 'launcher' }),
+    -- Launch calculator
+    awful.key({ modkey }, 'c', function()
+        awful.spawn('gnome-calculator')
+    end, { description = 'launch calculator', group = 'launcher' }),
 
-  -- Launch notepad
-  awful.key({ modkey }, 'x', function()
-    awful.spawn('gedit')
-  end, { description = 'launch notepad', group = 'launcher' }),
+    -- Launch notepad
+    awful.key({ modkey }, 'x', function()
+        awful.spawn('gedit')
+    end, { description = 'launch notepad', group = 'launcher' }),
 }
 
 -- This one is an array of shell command strings. It gets called at
 -- the end of rc.lua with awful.spawn.with_shell().
 local startup_apps = {
-  'unclutter',
-  'nitrogen --restore',
+    'unclutter',
+    'nitrogen --restore',
 }
 
 return {
-  theme = theme,
-  default_apps = default_apps,
-  custom_keybinds = custom_keybinds,
-  startup_apps = startup_apps
+    theme = theme,
+    default_apps = default_apps,
+    custom_keybinds = custom_keybinds,
+    startup_apps = startup_apps
 }
