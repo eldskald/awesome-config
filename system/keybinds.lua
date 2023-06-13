@@ -5,7 +5,7 @@ local naughty = require('naughty')
 local beautiful = require('beautiful')
 local dpi = beautiful.xresources.apply_dpi
 
-local custom = require('custom').custom_keybinds
+local custom = require('custom')
 
 local keys = {}
 
@@ -145,30 +145,30 @@ keys.globalkeys = gears.table.join(
     end, { description = 'toggle exit screen', group = 'system' }),
 
     awful.key({}, 'Print', function()
-        os.execute(custom.apps.screenshot)
+        os.execute(custom.default_apps.screenshot)
     end, { description = 'take a screenshot', group = 'system' }),
 
     -- Launchers
 
     awful.key({ modkey }, 'Return', function()
-        awful.spawn(custom.apps.terminal)
+        awful.spawn(custom.default_apps.terminal)
     end, { description = 'open a terminal', group = 'launcher' }),
 
     awful.key({ modkey }, 'd', function()
-        awful.spawn(custom.apps.launcher)
+        awful.spawn(custom.default_apps.launcher)
     end, { description = 'application launcher', group = 'launcher' }),
 
     awful.key({ modkey }, 'w', function()
-        awful.spawn(custom.apps.web_browser)
+        awful.spawn(custom.default_apps.web_browser)
     end, { description = 'launch web browser', group = 'launcher' }),
 
     awful.key({ modkey }, 'e', function()
-        awful.spawn(custom.apps.file_browser)
+        awful.spawn(custom.default_apps.file_browser)
     end, { description = 'launch file browser', group = 'launcher' }),
 
     -- Custom keybindings
 
-    unpack(custom.custom_keybinds)
+    table.unpack(custom.custom_keybinds)
 )
 
 keys.clientkeys = gears.table.join(
@@ -334,8 +334,5 @@ keys.clientkeys = gears.table.join(
         c:move_to_screen()
     end, { description = 'move to next screen', group = 'client' })
 )
-
--- root.keys(keys.globalkeys)
--- root.buttons(keys.desktopbuttons)
 
 return keys
