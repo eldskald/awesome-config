@@ -47,4 +47,9 @@ local startup_apps = {
   'nitrogen --restore',
 }
 
-return {theme, default_apps, custom_keybinds, startup_apps}
+return {
+  theme = theme,
+  default_apps = default_apps,
+  custom_keybinds = custom_keybinds,
+  startup_apps = startup_apps
+}
