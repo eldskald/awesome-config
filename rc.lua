@@ -21,6 +21,7 @@ require('theme.clients')
 
 local dir = gears.filesystem.get_configuration_dir()
 awful.spawn.with_shell('picom --config ' .. dir .. '/system/picom.conf')
+awful.spawn.with_shell('udiskie')
 for _, app in ipairs(custom.startup_apps) do
     awful.spawn.with_shell(app)
 end

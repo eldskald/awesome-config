@@ -7,6 +7,7 @@ These are my configs for Awesome, in a repository so I can more easily share the
 ## Dependencies
 
 - [picom](https://github.com/yshui/picom)
+- [udiskie](https://github.com/coldfix/udiskie)
 - [rofi](https://github.com/davatorium/rofi)
 - [awesome](https://awesomewm.org/)
 
