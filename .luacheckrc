@@ -21,6 +21,4 @@ globals = {
   'client',
 }
 
-exclude_files = {
-  'widgets/*',
-}
+allow_defined = true
