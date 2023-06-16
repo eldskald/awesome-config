@@ -258,12 +258,23 @@ keybinds.clientkeys = gears.table.join(
         c.fullscreen = not c.fullscreen
         c:raise()
     end, { description = 'toggle fullscreen', group = 'client' }),
-    awful.key(
-        { defs.modkey, 'Control' },
-        'f',
-        awful.client.floating.toggle,
-        { description = 'toggle floating', group = 'client' }
-    ),
+    awful.key({ defs.modkey, 'Control' }, 'f', function(c)
+        if c.floating then
+            awful.titlebar.hide(c)
+            c.floating = false
+        else
+            awful.titlebar.show(c)
+            c.floating = true
+            local area = c.screen.workarea
+            c.width = area.width / 2
+            c.height = area.height / 2
+            c.x = area.width / 4
+            c.y = area.height / 4
+        end
+    end, { description = 'toggle floating', group = 'client' }),
+    awful.key({ defs.modkey }, 't', function(c)
+        awful.titlebar.toggle(c)
+    end, { description = 'toggle title bar', group = 'client' }),
     awful.key({ defs.modkey, 'Control' }, 't', function(c)
         c.ontop = not c.ontop
     end, { description = 'toggle keep on top', group = 'client' }),
