@@ -19,6 +19,9 @@ globals = {
   'mouse',
   'root',
   'client',
+  'terminal',
+  'editor',
+  'editor_cmd'
 }
 
 allow_defined = true
