@@ -22,7 +22,7 @@ local tiling_resize_factor = 0.05
 
 function resize_client(c, direction)
     if
-        awful.layout.get(mouse.screen) == awful.layout.suit.floating
+        awful.layout.get(c.screen) == awful.layout.suit.floating
         or (c and c.floating)
     then
         if direction == 'up' then
@@ -48,50 +48,22 @@ function resize_client(c, direction)
 end
 
 -- Movement client in a given direction
+local floating_move_speed = dpi(20)
 function move_client(c, direction)
     if
         c.floating
-        or (awful.layout.get(mouse.screen) == awful.layout.suit.floating)
+        or (awful.layout.get(c.screen) == awful.layout.suit.floating)
     then
-        local workarea = awful.screen.focused().workarea
         if direction == 'up' then
-            c:geometry({
-                nil,
-                y = workarea.y + beautiful.useless_gap * 2,
-                nil,
-                nil,
-            })
+            c.y = c.y - floating_move_speed
         elseif direction == 'down' then
-            c:geometry({
-                nil,
-                y = workarea.height
-                    + workarea.y
-                    - c:geometry().height
-                    - beautiful.useless_gap * 2
-                    - beautiful.border_width * 2,
-                nil,
-                nil,
-            })
+            c.y = c.y + floating_move_speed
         elseif direction == 'left' then
-            c:geometry({
-                x = workarea.x + beautiful.useless_gap * 2,
-                nil,
-                nil,
-                nil,
-            })
+            c.x = c.x - floating_move_speed
         elseif direction == 'right' then
-            c:geometry({
-                x = workarea.width
-                    + workarea.x
-                    - c:geometry().width
-                    - beautiful.useless_gap * 2
-                    - beautiful.border_width * 2,
-                nil,
-                nil,
-                nil,
-            })
+            c.x = c.x + floating_move_speed
         end
-    elseif awful.layout.get(mouse.screen) == awful.layout.suit.max then
+    elseif awful.layout.get(c.screen) == awful.layout.suit.max then
         if direction == 'up' or direction == 'left' then
             awful.client.swap.byidx(-1, c)
         elseif direction == 'down' or direction == 'right' then
@@ -258,23 +230,20 @@ keybinds.clientkeys = gears.table.join(
         c.fullscreen = not c.fullscreen
         c:raise()
     end, { description = 'toggle fullscreen', group = 'client' }),
-    awful.key({ defs.modkey, 'Control' }, 'f', function(c)
-        if c.floating then
-            awful.titlebar.hide(c)
-            c.floating = false
-        else
-            awful.titlebar.show(c)
-            c.floating = true
-            local area = c.screen.workarea
-            c.width = area.width / 2
-            c.height = area.height / 2
-            c.x = area.width / 4
-            c.y = area.height / 4
+    awful.key({ defs.modkey }, 't', function(c)
+        if awful.layout.get(c.screen) ~= awful.layout.suit.floating then
+            if c.floating then
+                c.floating = false
+            else
+                c.floating = true
+                local area = c.screen.workarea
+                c.width = area.width * 0.6
+                c.height = area.height * 0.6
+                c.x = area.width * 0.2
+                c.y = area.height * 0.2
+            end
         end
     end, { description = 'toggle floating', group = 'client' }),
-    awful.key({ defs.modkey }, 't', function(c)
-        awful.titlebar.toggle(c)
-    end, { description = 'toggle title bar', group = 'client' }),
     awful.key({ defs.modkey, 'Control' }, 't', function(c)
         c.ontop = not c.ontop
     end, { description = 'toggle keep on top', group = 'client' }),

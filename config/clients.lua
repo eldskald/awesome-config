@@ -90,11 +90,12 @@ client.connect_signal('manage', function(c)
         awful.placement.no_offscreen(c)
     end
 
-    -- Disable titlebars by default
+    -- Disable titlebars
     awful.titlebar.hide(c)
 end)
 
--- Titlebar settings
+-- Titlebar settings. They're disable but let's keep this code here to make it
+-- easier to enable them in the future.
 client.connect_signal('request::titlebars', function(c)
     -- buttons for the titlebar
     local buttons = gears.table.join(
