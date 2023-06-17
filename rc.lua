@@ -254,3 +254,7 @@ root.buttons(keybinds.globalbuttons)
 
 -- Client configs
 require('config.clients')
+
+-- Startup programs
+local dir = gears.filesystem.get_configuration_dir()
+awful.spawn.with_shell('picom --config ' .. dir .. '/config/picom.conf')
