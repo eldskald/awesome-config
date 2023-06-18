@@ -246,4 +246,3 @@ require('config.clients')
 -- Startup programs
 local dir = gears.filesystem.get_configuration_dir()
 awful.spawn.with_shell('picom --config ' .. dir .. '/picom.conf')
-awful.spawn.with_shell('polybar --config=' .. dir .. '/polybar.ini example')
