@@ -10,8 +10,6 @@ read_globals = {
   'selection',
   'tag',
   'window',
-  'table.unpack',
-  'math.atan2',
 }
 
 globals = {
@@ -19,9 +17,6 @@ globals = {
   'mouse',
   'root',
   'client',
-  'terminal',
-  'editor',
-  'editor_cmd'
 }
 
 allow_defined = true

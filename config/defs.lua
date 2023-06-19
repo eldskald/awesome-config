@@ -1,4 +1,9 @@
+local terminal = 'kitty'
+local editor = 'nvim'
+
 return {
+    terminal = terminal,
+    editor = editor,
     modkey = 'Mod4',
     web_browser = 'brave-browser',
     notes = terminal .. ' ' .. editor .. ' -c "bd"',
