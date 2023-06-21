@@ -6,6 +6,7 @@ local menubar = require('menubar')
 local hotkeys_popup = require('awful.hotkeys_popup')
 
 local defs = require('config.defs')
+local theme = defs.theme
 
 menubar.utils.terminal = defs.terminal
 
@@ -47,7 +48,7 @@ local main_menu = awful.widget.launcher({
                 end,
             },
         },
-    })
+    }),
 })
 
 -- Keyboard map indicator and switcher
@@ -139,8 +140,18 @@ awful.screen.connect_for_each_screen(function(s)
     })
 
     -- Topbar setup
-    s.mywibox = awful.wibar({ position = 'top', screen = s })
-    s.mywibox:setup({
+    s.padding = awful.wibar({
+        screen = s,
+        height = 2 * theme.gap,
+        bg = '#00000000',
+    })
+    s.topbar = awful.wibar({
+        screen = s,
+        ontop = true,
+        height = 20,
+        width = s.geometry.width - 4 * theme.gap,
+    })
+    s.topbar:setup({
         layout = wibox.layout.align.horizontal,
         {
             -- Left widgets
@@ -160,4 +171,3 @@ awful.screen.connect_for_each_screen(function(s)
         },
     })
 end)
-

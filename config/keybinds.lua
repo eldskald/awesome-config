@@ -105,7 +105,7 @@ keybinds.globalkeys = gears.table.join(
 
     -- Launchers
     awful.key({ defs.modkey }, 'Return', function()
-        awful.spawn(terminal)
+        awful.spawn(defs.terminal)
     end, { description = 'open a terminal', group = 'launcher' }),
     awful.key({ defs.modkey }, 'd', function()
         awful.spawn('rofi -modi drun -show drun')

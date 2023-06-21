@@ -1,4 +1,4 @@
-local terminal = 'kitty'
+local terminal = 'wezterm'
 local editor = 'nvim'
 
 return {
@@ -10,4 +10,7 @@ return {
     code = terminal .. ' lua',
     games = 'steam',
     screenshot_tool = 'maim -s | xclip -selection clipboard -t image/png',
+    theme = {
+        gap = 8,
+    },
 }

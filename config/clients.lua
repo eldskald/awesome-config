@@ -4,9 +4,10 @@ local gears = require('gears')
 local wibox = require('wibox')
 
 local keybinds = require('config.keybinds')
+local theme = require('config.defs').theme
 
 -- Gaps
-beautiful.useless_gap = 8
+beautiful.useless_gap = theme.gap
 beautiful.gap_single_client = true
 
 -- Rules to apply to new clients (through the "manage" signal).
@@ -139,9 +140,9 @@ client.connect_signal('request::titlebars', function(c)
 end)
 
 -- Borders
-client.connect_signal('focus', function(c)
-    c.border_color = beautiful.border_focus
-end)
-client.connect_signal('unfocus', function(c)
-    c.border_color = beautiful.border_normal
-end)
+-- client.connect_signal('focus', function(c)
+--     c.border_color = beautiful.border_focus
+-- end)
+-- client.connect_signal('unfocus', function(c)
+--     c.border_color = beautiful.border_normal
+-- end)
