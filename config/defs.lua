@@ -11,6 +11,7 @@ return {
     games = 'steam',
     screenshot_tool = 'maim -s | xclip -selection clipboard -t image/png',
     theme = {
-        gap = 8,
+        gap = os.getenv('DE_THEME_GAP'),
+        corner_radius = os.getenv('DE_THEME_CORNER_RADIUS'),
     },
 }

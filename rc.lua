@@ -8,6 +8,8 @@ require('awful.autofocus')
 local beautiful = require('beautiful')
 local naughty = require('naughty')
 
+local theme = require('config.defs').theme
+
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
@@ -73,4 +75,9 @@ require('config.clients')
 
 -- Startup programs
 local dir = gears.filesystem.get_configuration_dir()
-awful.spawn.with_shell('picom --config ' .. dir .. '/picom.conf')
+awful.spawn.with_shell(
+    'picom --config '
+        .. dir
+        .. '/picom.conf --corner-radius='
+        .. theme.corner_radius
+)
