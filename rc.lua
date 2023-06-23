@@ -8,19 +8,29 @@ require('awful.autofocus')
 local beautiful = require('beautiful')
 local naughty = require('naughty')
 
-local theme = require('config.defs').theme
+local dir = gears.filesystem.get_configuration_dir()
 
--- Set env variables for the whole system so you can use whatever you set
--- on defs.lua on other applications like your terminal emulator and other
+-- Theme settings
+local theme = require('config.theme')
+beautiful.init(dir .. 'config/theme.lua')
+
+-- Set env variables with theme variables so you can use what you set
+-- on theme.lua on other applications like your terminal emulator and other
 -- widgets, rofi, etc.
 local stdlib = require('posix.stdlib')
-stdlib.setenv('DE_THEME_GAP', theme.gap)
-stdlib.setenv('DE_THEME_CORNER_RADIUS', theme.corner_radius)
 stdlib.setenv('DE_THEME_BG_COLOR', theme.bg_color)
-stdlib.setenv('DE_THEME_BG_OPACITY', theme.bg_opacity)
+stdlib.setenv('DE_THEME_BG_OPACITY', theme.opacity)
 stdlib.setenv('DE_THEME_FONT_FAMILY', theme.font_family)
 stdlib.setenv('DE_THEME_FONT_SIZE', theme.font_size)
-stdlib.setenv('DE_THEME_FONT_COLOR', theme.font_color)
+stdlib.setenv('DE_THEME_FONT_COLOR', theme.fg_color)
+stdlib.setenv('DE_THEME_COLOR_1', theme.color_1)
+stdlib.setenv('DE_THEME_COLOR_2', theme.color_2)
+stdlib.setenv('DE_THEME_COLOR_3', theme.color_3)
+stdlib.setenv('DE_THEME_COLOR_4', theme.color_4)
+stdlib.setenv('DE_THEME_COLOR_5', theme.color_5)
+stdlib.setenv('DE_THEME_COLOR_6', theme.color_6)
+stdlib.setenv('DE_THEME_COLOR_7', theme.color_7)
+stdlib.setenv('DE_THEME_COLOR_8', theme.color_8)
 
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -50,8 +60,7 @@ do
     end)
 end
 
-beautiful.init(gears.filesystem.get_themes_dir() .. 'default/theme.lua')
-
+-- Layouts
 awful.layout.layouts = {
     awful.layout.suit.tile,
     awful.layout.suit.tile.bottom,
@@ -85,10 +94,4 @@ root.buttons(keybinds.globalbuttons)
 require('config.clients')
 
 -- Startup programs
-local dir = gears.filesystem.get_configuration_dir()
-awful.spawn.with_shell(
-    'picom --config '
-        .. dir
-        .. '/picom.conf --corner-radius='
-        .. theme.corner_radius
-)
+awful.spawn.with_shell('picom --config ' .. dir .. '/picom.conf')

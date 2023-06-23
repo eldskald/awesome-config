@@ -4,9 +4,10 @@ local wibox = require('wibox')
 local beautiful = require('beautiful')
 local menubar = require('menubar')
 local hotkeys_popup = require('awful.hotkeys_popup')
+local dpi = beautiful.xresources.apply_dpi
 
 local defs = require('config.defs')
-local theme = defs.theme
+local theme = require('config.theme')
 
 menubar.utils.terminal = defs.terminal
 
@@ -142,14 +143,17 @@ awful.screen.connect_for_each_screen(function(s)
     -- Topbar setup
     s.padding = awful.wibar({
         screen = s,
-        height = 2 * theme.gap,
+        height = 2 * theme.useless_gap,
         bg = '#00000000',
     })
     s.topbar = awful.wibar({
         screen = s,
         ontop = true,
-        height = 20,
-        width = s.geometry.width - 4 * theme.gap,
+        height = dpi(24),
+        width = s.geometry.width - 4 * theme.useless_gap,
+        fg = theme.fg_color,
+        bg = theme.bg_color,
+        opacity = theme.opacity,
     })
     s.topbar:setup({
         layout = wibox.layout.align.horizontal,

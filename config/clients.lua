@@ -4,11 +4,6 @@ local gears = require('gears')
 local wibox = require('wibox')
 
 local keybinds = require('config.keybinds')
-local theme = require('config.defs').theme
-
--- Gaps
-beautiful.useless_gap = theme.gap
-beautiful.gap_single_client = true
 
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
