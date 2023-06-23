@@ -10,6 +10,18 @@ local naughty = require('naughty')
 
 local theme = require('config.defs').theme
 
+-- Set env variables for the whole system so you can use whatever you set
+-- on defs.lua on other applications like your terminal emulator and other
+-- widgets, rofi, etc.
+local stdlib = require('posix.stdlib')
+stdlib.setenv('DE_THEME_GAP', theme.gap)
+stdlib.setenv('DE_THEME_CORNER_RADIUS', theme.corner_radius)
+stdlib.setenv('DE_THEME_BG_COLOR', theme.bg_color)
+stdlib.setenv('DE_THEME_BG_OPACITY', theme.bg_opacity)
+stdlib.setenv('DE_THEME_FONT_FAMILY', theme.font_family)
+stdlib.setenv('DE_THEME_FONT_SIZE', theme.font_size)
+stdlib.setenv('DE_THEME_FONT_COLOR', theme.font_color)
+
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
@@ -29,7 +41,6 @@ do
             return
         end
         in_error = true
-
         naughty.notify({
             preset = naughty.config.presets.critical,
             title = 'Oops, an error happened!',

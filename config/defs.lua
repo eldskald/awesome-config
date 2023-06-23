@@ -1,7 +1,7 @@
 local terminal = 'wezterm'
 local editor = 'nvim'
 
-return {
+local defs = {
     terminal = terminal,
     editor = editor,
     modkey = 'Mod4',
@@ -11,7 +11,13 @@ return {
     games = 'steam',
     screenshot_tool = 'maim -s | xclip -selection clipboard -t image/png',
     theme = {
-        gap = os.getenv('DE_THEME_GAP'),
-        corner_radius = os.getenv('DE_THEME_CORNER_RADIUS'),
+        gap = '8',
+        corner_radius = '8',
+        bg_color = '#1a1b26',
+        bg_opacity = '0.8',
+        font_family = 'TerminessTTF Nerd Font',
+        font_size = '14',
+        font_color = '#c0caf5',
     },
 }
+return defs

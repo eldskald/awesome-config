@@ -6,6 +6,7 @@ These are my configs for Awesome, in a repository so I can more easily share the
 
 ## Dependencies
 
+- [luarocks](https://luarocks.org/) and [luaposix](https://github.com/luaposix/luaposix)
 - [picom](https://github.com/yshui/picom)
 - [udiskie](https://github.com/coldfix/udiskie)
 - [polybar](https://github.com/polybar/polybar)
