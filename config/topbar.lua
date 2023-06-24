@@ -107,6 +107,7 @@ local volume_widget = require('widgets.volume-widget.volume')
 local volume = wibox.container.margin(
     volume_widget({
         widget_type = 'icon_and_text',
+        step = 2,
     }),
     dpi(8),
     dpi(8),
@@ -120,7 +121,7 @@ local brightness = wibox.container.margin(
     brightness_widget({
         type = 'icon_and_text',
         program = 'brightnessctl',
-        percentage = false,
+        percentage = true,
         step = 2,
     }),
     dpi(8),

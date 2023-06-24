@@ -18,6 +18,7 @@ local beautiful = require('beautiful')
 
 local ICON_DIR = gfs.get_configuration_dir() .. 'widgets/brightness-widget/'
 local get_brightness_cmd
+local max_brightness_cmd
 local set_brightness_cmd
 local inc_brightness_cmd
 local dec_brightness_cmd
@@ -44,6 +45,7 @@ local function worker(user_args)
     local step = args.step or 5
     local base = args.base or 20
     local current_level = 0 -- current brightness value
+    local max_level = 0 -- max brightness value
     local tooltip = args.tooltip or false
     local percentage = args.percentage or false
     local rmb_set_max = args.rmb_set_max or false
@@ -59,6 +61,7 @@ local function worker(user_args)
         dec_brightness_cmd = 'xbacklight -dec ' .. step
     elseif program == 'brightnessctl' then
         get_brightness_cmd = 'brightnessctl get'
+        max_brightness_cmd = 'brightnessctl max'
         set_brightness_cmd = 'brightnessctl set %d%%' -- <level>
         inc_brightness_cmd = 'brightnessctl set +' .. step .. '%'
         dec_brightness_cmd = 'brightnessctl set ' .. step .. '-%'
@@ -85,10 +88,14 @@ local function worker(user_args)
             },
             spacing = 4,
             layout = wibox.layout.fixed.horizontal,
-            set_value = function(self, level)
-                local display_level = level
+            set_value = function(self)
+                print(self)
+                print(current_level)
+                print(max_level)
+                local display_level = current_level
                 if percentage then
-                    display_level = display_level .. '%'
+                    display_level = (current_level / max_level) * 100
+                    display_level = math.floor(display_level + 0.5) .. '%'
                 end
                 self:get_children_by_id('txt')[1]:set_text(display_level)
             end,
@@ -111,7 +118,7 @@ local function worker(user_args)
             forced_width = 18,
             paddings = 2,
             widget = wibox.container.arcchart,
-            set_value = function(self, level)
+            set_value = function(self, level, _)
                 self:set_value(level)
             end,
         })
@@ -120,18 +127,20 @@ local function worker(user_args)
         return
     end
 
-    local update_widget = function(widget, stdout, _, _, _)
-        local brightness_level = tonumber(string.format('%.0f', stdout))
-        current_level = brightness_level
-        widget:set_value(brightness_level)
+    local update_widget = function(widget)
+        spawn.easy_async(get_brightness_cmd, function(current)
+            current_level = tonumber(string.format('%.0f', current))
+            spawn.easy_async(max_brightness_cmd, function(max)
+                max_level = tonumber(string.format('%.0f', max))
+                widget:set_value()
+            end)
+        end)
     end
 
     function brightness_widget:set(value)
         current_level = value
         spawn.easy_async(string.format(set_brightness_cmd, value), function()
-            spawn.easy_async(get_brightness_cmd, function(out)
-                update_widget(self.widget, out)
-            end)
+            update_widget(self.widget)
         end)
     end
 
@@ -158,17 +167,13 @@ local function worker(user_args)
 
     function brightness_widget:inc()
         spawn.easy_async(inc_brightness_cmd, function()
-            spawn.easy_async(get_brightness_cmd, function(out)
-                update_widget(self.widget, out)
-            end)
+            update_widget(self.widget)
         end)
     end
 
     function brightness_widget:dec()
         spawn.easy_async(dec_brightness_cmd, function()
-            spawn.easy_async(get_brightness_cmd, function(out)
-                update_widget(self.widget, out)
-            end)
+            update_widget(self.widget)
         end)
     end
 
