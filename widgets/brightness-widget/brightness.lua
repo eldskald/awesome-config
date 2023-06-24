@@ -89,9 +89,6 @@ local function worker(user_args)
             spacing = 4,
             layout = wibox.layout.fixed.horizontal,
             set_value = function(self)
-                print(self)
-                print(current_level)
-                print(max_level)
                 local display_level = current_level
                 if percentage then
                     display_level = (current_level / max_level) * 100

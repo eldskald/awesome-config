@@ -11,8 +11,19 @@ local theme = require('config.theme')
 
 menubar.utils.terminal = defs.terminal
 
+-- Widget wrapper
+local wrapper = function(widget)
+    return wibox.container.margin(
+        widget,
+        dpi(8),
+        dpi(8),
+        dpi(8),
+        dpi(8)
+    )
+end
+
 -- Main menu widget
-local main_menu = wibox.container.margin(
+local main_menu = wrapper(
     awful.widget.launcher({
         image = beautiful.awesome_icon,
         menu = awful.menu({
@@ -57,12 +68,9 @@ local main_menu = wibox.container.margin(
                 },
             },
         }),
-    }),
-    dpi(8),
-    dpi(8),
-    dpi(8),
-    dpi(8)
+    })
 )
+
 -- Keyboard map indicator and switcher
 -- local keyboardlayout = wibox.container.margin(
 --     awful.widget.keyboardlayout(),
@@ -74,13 +82,7 @@ local main_menu = wibox.container.margin(
 
 -- Time widget
 local calendar_widget = require('widgets.calendar-widget.calendar')
-local time = wibox.container.margin(
-    wibox.widget.textclock(),
-    dpi(8),
-    dpi(8),
-    dpi(8),
-    dpi(8)
-)
+local time = wrapper(wibox.widget.textclock())
 calendar_widget({ placement = 'top_right' })
 time:connect_signal('button::press', function(_, _, _, button)
     if button == 1 then
@@ -90,44 +92,32 @@ end)
 
 -- Battery widget
 local battery_widget = require('widgets.battery-widget.battery')
-local battery = wibox.container.margin(
+local battery = wrapper(
     battery_widget({
         font = theme.font,
         enable_battery_warning = false,
         show_current_level = true,
-    }),
-    dpi(8),
-    dpi(8),
-    dpi(8),
-    dpi(8)
+    })
 )
 
 -- Volume widget
 local volume_widget = require('widgets.volume-widget.volume')
-local volume = wibox.container.margin(
+local volume = wrapper(
     volume_widget({
         widget_type = 'icon_and_text',
         step = 2,
-    }),
-    dpi(8),
-    dpi(8),
-    dpi(8),
-    dpi(8)
+    })
 )
 
 -- Brightness widget
 local brightness_widget = require('widgets.brightness-widget.brightness')
-local brightness = wibox.container.margin(
+local brightness = wrapper(
     brightness_widget({
         type = 'icon_and_text',
         program = 'brightnessctl',
         percentage = true,
         step = 2,
-    }),
-    dpi(8),
-    dpi(8),
-    dpi(8),
-    dpi(8)
+    })
 )
 
 -- Create a wibox for each screen and add it
@@ -180,28 +170,20 @@ awful.screen.connect_for_each_screen(function(s)
         s,
         awful.layout.layouts[1]
     )
-    s.mytaglist = wibox.container.margin(
+    s.mytaglist = wrapper(
         awful.widget.taglist({
             screen = s,
             filter = awful.widget.taglist.filter.all,
             buttons = taglist_buttons,
-        }),
-        dpi(8),
-        dpi(8),
-        dpi(8),
-        dpi(8)
+        })
     )
 
     -- Run prompt
     s.mypromptbox = awful.widget.prompt()
 
     -- Layout box
-    s.mylayoutbox = wibox.container.margin(
-        awful.widget.layoutbox(s),
-        dpi(8),
-        dpi(8),
-        dpi(8),
-        dpi(8)
+    s.mylayoutbox = wrapper(
+        awful.widget.layoutbox(s)
     )
     s.mylayoutbox:buttons(gears.table.join(
         awful.button({}, 1, function()
@@ -218,16 +200,12 @@ awful.screen.connect_for_each_screen(function(s)
         end)
     ))
 
-    s.mytasklist = wibox.container.margin(
+    s.mytasklist = wrapper(
         awful.widget.tasklist({
             screen = s,
             filter = awful.widget.tasklist.filter.currenttags,
             buttons = tasklist_buttons,
-        }),
-        dpi(8),
-        dpi(8),
-        dpi(8),
-        dpi(8)
+        })
     )
 
     -- Topbar setup
@@ -258,6 +236,7 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            wibox.widget.systray(),
             time,
             brightness,
             volume,
