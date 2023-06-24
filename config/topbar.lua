@@ -12,51 +12,122 @@ local theme = require('config.theme')
 menubar.utils.terminal = defs.terminal
 
 -- Main menu widget
-local main_menu = awful.widget.launcher({
-    image = beautiful.awesome_icon,
-    menu = awful.menu({
-        items = {
-            {
-                'Keybindings',
-                function()
-                    hotkeys_popup.show_help(nil, awful.screen.focused())
-                end,
+local main_menu = wibox.container.margin(
+    awful.widget.launcher({
+        image = beautiful.awesome_icon,
+        menu = awful.menu({
+            items = {
+                {
+                    '  Open Terminal',
+                    function()
+                        awful.spawn(defs.terminal)
+                    end,
+                },
+                {
+                    '󰘥  Keybindings',
+                    function()
+                        hotkeys_popup.show_help(nil, awful.screen.focused())
+                    end,
+                },
+                { '󱚋  Manual', defs.terminal .. ' -e man awesome' },
+                { '󰑓  Reload', awesome.restart },
+                {
+                    '󰍃  Logout',
+                    function()
+                        awesome.quit()
+                    end,
+                },
+                {
+                    '󰏤  Suspend',
+                    function()
+                        os.execute('systemctl suspend')
+                    end,
+                },
+                {
+                    '  Restart',
+                    function()
+                        os.execute('systemctl reboot')
+                    end,
+                },
+                {
+                    '  Power Off',
+                    function()
+                        os.execute('systemctl poweroff')
+                    end,
+                },
             },
-            { 'Manual', defs.terminal .. ' -e man awesome' },
-            { 'Reload', awesome.restart },
-            {
-                'Logout',
-                function()
-                    awesome.quit()
-                end,
-            },
-            {
-                'Suspend',
-                function()
-                    os.execute('systemctl suspend')
-                end,
-            },
-            {
-                'Restart',
-                function()
-                    os.execute('systemctl reboot')
-                end,
-            },
-            {
-                'Power Off',
-                function()
-                    os.execute('systemctl poweroff')
-                end,
-            },
-        },
+        }),
     }),
-})
-
+    dpi(8),
+    dpi(8),
+    dpi(8),
+    dpi(8)
+)
 -- Keyboard map indicator and switcher
-local keyboardlayout = awful.widget.keyboardlayout()
+-- local keyboardlayout = wibox.container.margin(
+--     awful.widget.keyboardlayout(),
+--     dpi(8),
+--     dpi(8),
+--     dpi(8),
+--     dpi(8)
+-- )
 
--- Create a textclock widget
-local time = wibox.widget.textclock()
+-- Time widget
+local calendar_widget = require('widgets.calendar-widget.calendar')
+local time = wibox.container.margin(
+    wibox.widget.textclock(),
+    dpi(8),
+    dpi(8),
+    dpi(8),
+    dpi(8)
+)
+calendar_widget({ placement = 'top_right' })
+time:connect_signal('button::press', function(_, _, _, button)
+    if button == 1 then
+        calendar_widget.toggle()
+    end
+end)
+
+-- Battery widget
+local battery_widget = require('widgets.battery-widget.battery')
+local battery = wibox.container.margin(
+    battery_widget({
+        font = theme.font,
+        enable_battery_warning = false,
+        show_current_level = true,
+    }),
+    dpi(8),
+    dpi(8),
+    dpi(8),
+    dpi(8)
+)
+
+-- Volume widget
+local volume_widget = require('widgets.volume-widget.volume')
+local volume = wibox.container.margin(
+    volume_widget({
+        widget_type = 'icon_and_text',
+    }),
+    dpi(8),
+    dpi(8),
+    dpi(8),
+    dpi(8)
+)
+
+-- Brightness widget
+local brightness_widget = require('widgets.brightness-widget.brightness')
+local brightness = wibox.container.margin(
+    brightness_widget({
+        type = 'icon_and_text',
+        program = 'brightnessctl',
+        percentage = false,
+        step = 2,
+    }),
+    dpi(8),
+    dpi(8),
+    dpi(8),
+    dpi(8)
+)
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -108,11 +179,29 @@ awful.screen.connect_for_each_screen(function(s)
         s,
         awful.layout.layouts[1]
     )
+    s.mytaglist = wibox.container.margin(
+        awful.widget.taglist({
+            screen = s,
+            filter = awful.widget.taglist.filter.all,
+            buttons = taglist_buttons,
+        }),
+        dpi(8),
+        dpi(8),
+        dpi(8),
+        dpi(8)
+    )
 
-    -- Widgets
+    -- Run prompt
     s.mypromptbox = awful.widget.prompt()
 
-    s.mylayoutbox = awful.widget.layoutbox(s)
+    -- Layout box
+    s.mylayoutbox = wibox.container.margin(
+        awful.widget.layoutbox(s),
+        dpi(8),
+        dpi(8),
+        dpi(8),
+        dpi(8)
+    )
     s.mylayoutbox:buttons(gears.table.join(
         awful.button({}, 1, function()
             awful.layout.inc(1)
@@ -128,17 +217,17 @@ awful.screen.connect_for_each_screen(function(s)
         end)
     ))
 
-    s.mytaglist = awful.widget.taglist({
-        screen = s,
-        filter = awful.widget.taglist.filter.all,
-        buttons = taglist_buttons,
-    })
-
-    s.mytasklist = awful.widget.tasklist({
-        screen = s,
-        filter = awful.widget.tasklist.filter.currenttags,
-        buttons = tasklist_buttons,
-    })
+    s.mytasklist = wibox.container.margin(
+        awful.widget.tasklist({
+            screen = s,
+            filter = awful.widget.tasklist.filter.currenttags,
+            buttons = tasklist_buttons,
+        }),
+        dpi(8),
+        dpi(8),
+        dpi(8),
+        dpi(8)
+    )
 
     -- Topbar setup
     s.padding = awful.wibar({
@@ -149,7 +238,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.topbar = awful.wibar({
         screen = s,
         ontop = true,
-        height = dpi(24),
+        height = dpi(40),
         width = s.geometry.width - 4 * theme.useless_gap,
         fg = theme.fg_color,
         bg = theme.bg_color,
@@ -168,9 +257,10 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            keyboardlayout,
-            wibox.widget.systray(),
             time,
+            brightness,
+            volume,
+            battery,
             s.mylayoutbox,
         },
     })

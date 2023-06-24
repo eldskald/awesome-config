@@ -41,30 +41,38 @@ theme.fg_minimize = theme.fg_color
 theme.useless_gap = dpi(8)
 theme.gap_single_client = true
 
+theme.border_width = 0
+theme.border_normal = theme.color_1
+theme.border_focus = theme.color_8
+theme.border_marked = theme.color_6
+
+theme.menu_submenu_icon = themes_path .. 'default/submenu.png'
+theme.menu_width = dpi(200)
+theme.menu_height = dpi(25)
+theme.menu_border_color = theme.color_1
+theme.menu_border_width = 1
+
+theme.notification_font = theme.font
+theme.notification_bg = theme.bg_color
+theme.notification_fg = theme.fg_color
+theme.notification_border_color = theme.color_1
+theme.notification_border_width = 1
+theme.notification_opacity = theme.opacity
+
+theme.hotkeys_font = theme.font
+theme.hotkeys_description_font = theme.font
+theme.hotkeys_bg = theme.bg_color
+theme.hotkeys_fg = theme.fg_color
+theme.hotkeys_opacity = theme.opacity
+theme.hotkeys_label_fg = theme.color_bg
+theme.hotkeys_modifiers_fg = theme.color_7
+
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
 theme.taglist_squares_sel =
     theme_assets.taglist_squares_sel(taglist_square_size, theme.fg_normal)
 theme.taglist_squares_unsel =
     theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
-
--- Variables set for theming notifications:
--- notification_font
--- notification_[bg|fg]
--- notification_[width|height|margin]
--- notification_[border_color|border_width|shape|opacity]
-
--- Variables set for theming the menu:
--- menu_[bg|fg]_[normal|focus]
--- menu_[border_color|border_width]
-theme.menu_submenu_icon = themes_path .. 'default/submenu.png'
-theme.menu_height = dpi(15)
-theme.menu_width = dpi(100)
-
--- You can add as many variables as
--- you wish and access them by using
--- beautiful.variable in your rc.lua
---theme.bg_widget = "#cc0000"
 
 -- Define the image to load
 theme.titlebar_close_button_normal = themes_path
