@@ -13,53 +13,51 @@ local wrapper = require('widgets.helpers.wrapper')
 menubar.utils.terminal = defs.terminal
 
 -- Main menu widget
-local main_menu = wrapper(
-    awful.widget.launcher({
-        image = beautiful.awesome_icon,
-        menu = awful.menu({
-            items = {
-                {
-                    '  Open Terminal',
-                    function()
-                        awful.spawn(defs.terminal)
-                    end,
-                },
-                {
-                    '󰘥  Keybindings',
-                    function()
-                        hotkeys_popup.show_help(nil, awful.screen.focused())
-                    end,
-                },
-                { '󱚋  Manual', defs.terminal .. ' -e man awesome' },
-                { '󰑓  Reload', awesome.restart },
-                {
-                    '󰍃  Logout',
-                    function()
-                        awesome.quit()
-                    end,
-                },
-                {
-                    '󰏤  Suspend',
-                    function()
-                        os.execute('systemctl suspend')
-                    end,
-                },
-                {
-                    '  Restart',
-                    function()
-                        os.execute('systemctl reboot')
-                    end,
-                },
-                {
-                    '  Power Off',
-                    function()
-                        os.execute('systemctl poweroff')
-                    end,
-                },
+local main_menu = wrapper(awful.widget.launcher({
+    image = beautiful.awesome_icon,
+    menu = awful.menu({
+        items = {
+            {
+                '  Open Terminal',
+                function()
+                    awful.spawn(defs.terminal)
+                end,
             },
-        }),
-    })
-)
+            {
+                '󰘥  Keybindings',
+                function()
+                    hotkeys_popup.show_help(nil, awful.screen.focused())
+                end,
+            },
+            { '󱚋  Manual', defs.terminal .. ' -e man awesome' },
+            { '󰑓  Reload', awesome.restart },
+            {
+                '󰍃  Logout',
+                function()
+                    awesome.quit()
+                end,
+            },
+            {
+                '󰏤  Suspend',
+                function()
+                    os.execute('systemctl suspend')
+                end,
+            },
+            {
+                '  Restart',
+                function()
+                    os.execute('systemctl reboot')
+                end,
+            },
+            {
+                '  Power Off',
+                function()
+                    os.execute('systemctl poweroff')
+                end,
+            },
+        },
+    }),
+}))
 
 -- Keyboard map indicator and switcher
 -- local keyboardlayout = wrapper(awful.widget.keyboardlayout())
@@ -77,33 +75,27 @@ local calendar = require('widgets.calendar')
 
 -- Battery widget
 local battery_widget = require('widgets.battery-widget.battery')
-local battery = wrapper(
-    battery_widget({
-        font = beautiful.font,
-        enable_battery_warning = false,
-        show_current_level = true,
-    })
-)
+local battery = wrapper(battery_widget({
+    font = beautiful.font,
+    enable_battery_warning = false,
+    show_current_level = true,
+}))
 
 -- Volume widget
 local volume_widget = require('widgets.volume-widget.volume')
-local volume = wrapper(
-    volume_widget({
-        widget_type = 'icon_and_text',
-        step = 5,
-    })
-)
+local volume = wrapper(volume_widget({
+    widget_type = 'icon_and_text',
+    step = 5,
+}))
 
 -- Brightness widget
 local brightness_widget = require('widgets.brightness-widget.brightness')
-local brightness = wrapper(
-    brightness_widget({
-        type = 'icon_and_text',
-        program = 'brightnessctl',
-        percentage = true,
-        step = 2,
-    })
-)
+local brightness = wrapper(brightness_widget({
+    type = 'icon_and_text',
+    program = 'brightnessctl',
+    percentage = true,
+    step = 2,
+}))
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -155,21 +147,17 @@ awful.screen.connect_for_each_screen(function(s)
         s,
         awful.layout.layouts[1]
     )
-    s.mytaglist = wrapper(
-        awful.widget.taglist({
-            screen = s,
-            filter = awful.widget.taglist.filter.all,
-            buttons = taglist_buttons,
-        })
-    )
+    s.mytaglist = wrapper(awful.widget.taglist({
+        screen = s,
+        filter = awful.widget.taglist.filter.all,
+        buttons = taglist_buttons,
+    }))
 
     -- Run prompt
     s.mypromptbox = awful.widget.prompt()
 
     -- Layout box
-    s.mylayoutbox = wrapper(
-        awful.widget.layoutbox(s)
-    )
+    s.mylayoutbox = wrapper(awful.widget.layoutbox(s))
     s.mylayoutbox:buttons(gears.table.join(
         awful.button({}, 1, function()
             awful.layout.inc(1)
@@ -205,6 +193,8 @@ awful.screen.connect_for_each_screen(function(s)
         ontop = true,
         height = dpi(40),
         width = s.geometry.width - 4 * beautiful.useless_gap,
+        y = 2 * beautiful.useless_gap,
+        x = 2 * beautiful.useless_gap,
         fg = beautiful.fg_color,
         bg = beautiful.bg_color,
         opacity = beautiful.opacity,

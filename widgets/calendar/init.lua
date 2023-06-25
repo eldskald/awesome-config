@@ -30,7 +30,7 @@ local function calendar(placement)
         weekday_fg = beautiful.fg_normal,
         header_fg = beautiful.fg_normal,
         border = beautiful.notificiation_border,
-        opacity = beautiful.notification_opacity
+        opacity = beautiful.notification_opacity,
     }
 
     styles.month = {
@@ -218,7 +218,7 @@ local function calendar(placement)
         end
     end
 
-    click_to_hide.popup(popup, nil, true)
+    click_to_hide.popup(popup, nil)
 
     return calendar_widget
 end

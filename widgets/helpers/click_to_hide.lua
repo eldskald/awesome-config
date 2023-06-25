@@ -11,12 +11,14 @@
 -- it to close only when you click outside the popup.
 --
 -- NOTE: The version on this file is old, the one on the link is for
--- awesome-git only. The one on this file doesn't work if you click
--- on the topbar. I'll change to git version once I start using arch.
+-- awesome-git only. This old version is buggy, sometimes it works, sometimes
+-- it doesn't, you have to put the mouse in the widget and leave the widget
+-- again to retry but the new one on awesome-git is said to work perfectly.
+-- I'll change versions once I swap to arch.
 
 local capi = { button = button, mouse = mouse }
 
-local function click_to_hide(widget, hide_fct, only_outside)
+local function click_to_hide(widget, hide_fct)
     only_outside = only_outside or false
 
     hide_fct = hide_fct or function()
@@ -28,33 +30,17 @@ local function click_to_hide(widget, hide_fct, only_outside)
         if not w.visible then
             capi.button.disconnect_signal('press', hide_fct)
         else
-            -- the mouse button is pressed here, we have to wait for the release
-            local function connect_to_press()
-                capi.button.disconnect_signal('release', connect_to_press)
-                capi.button.connect_signal('press', hide_fct)
-            end
-            capi.button.connect_signal('release', connect_to_press)
+            capi.button.connect_signal('press', hide_fct)
         end
     end)
-
-    if only_outside then
-        -- disable hide on click when the mouse is inside the widget
-        widget:connect_signal('mouse::enter', function()
-            capi.button.disconnect_signal('press', hide_fct)
-        end)
-
-        widget:connect_signal('mouse::leave', function()
-            capi.button.connect_signal('press', hide_fct)
-        end)
-    end
 end
 
-local function click_to_hide_menu(menu, hide_fct, outside_only)
+local function click_to_hide_menu(menu, hide_fct)
     hide_fct = hide_fct or function()
         menu:hide()
     end
 
-    click_to_hide(menu.wibox, hide_fct, outside_only)
+    click_to_hide(menu.wibox, hide_fct)
 end
 
 return {
