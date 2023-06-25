@@ -7,20 +7,10 @@ local hotkeys_popup = require('awful.hotkeys_popup')
 local dpi = beautiful.xresources.apply_dpi
 
 local defs = require('config.defs')
-local theme = require('config.theme')
+
+local wrapper = require('widgets.helpers.wrapper')
 
 menubar.utils.terminal = defs.terminal
-
--- Widget wrapper
-local wrapper = function(widget)
-    return wibox.container.margin(
-        widget,
-        dpi(8),
-        dpi(8),
-        dpi(8),
-        dpi(8)
-    )
-end
 
 -- Main menu widget
 local main_menu = wrapper(
@@ -72,29 +62,24 @@ local main_menu = wrapper(
 )
 
 -- Keyboard map indicator and switcher
--- local keyboardlayout = wibox.container.margin(
---     awful.widget.keyboardlayout(),
---     dpi(8),
---     dpi(8),
---     dpi(8),
---     dpi(8)
--- )
+-- local keyboardlayout = wrapper(awful.widget.keyboardlayout())
 
 -- Time widget
-local calendar_widget = require('widgets.calendar-widget.calendar')
-local time = wrapper(wibox.widget.textclock())
-calendar_widget({ placement = 'top_right' })
-time:connect_signal('button::press', function(_, _, _, button)
-    if button == 1 then
-        calendar_widget.toggle()
-    end
-end)
+local calendar = require('widgets.calendar')
+-- local calendar_widget = require('widgets.calendar-widget.calendar')
+-- local time = wibox.widget.textclock()
+-- calendar_widget('top_center')
+-- time:connect_signal('button::press', function(_, _, _, button)
+--     if button == 1 then
+--         calendar_widget.toggle()
+--     end
+-- end)
 
 -- Battery widget
 local battery_widget = require('widgets.battery-widget.battery')
 local battery = wrapper(
     battery_widget({
-        font = theme.font,
+        font = beautiful.font,
         enable_battery_warning = false,
         show_current_level = true,
     })
@@ -105,7 +90,7 @@ local volume_widget = require('widgets.volume-widget.volume')
 local volume = wrapper(
     volume_widget({
         widget_type = 'icon_and_text',
-        step = 2,
+        step = 5,
     })
 )
 
@@ -144,24 +129,24 @@ local taglist_buttons = gears.table.join(
     end)
 )
 
-local tasklist_buttons = gears.table.join(
-    awful.button({}, 1, function(c)
-        if c == client.focus then
-            c.minimized = true
-        else
-            c:emit_signal('request::activate', 'tasklist', { raise = true })
-        end
-    end),
-    awful.button({}, 3, function()
-        awful.menu.client_list({ theme = { width = 250 } })
-    end),
-    awful.button({}, 4, function()
-        awful.client.focus.byidx(1)
-    end),
-    awful.button({}, 5, function()
-        awful.client.focus.byidx(-1)
-    end)
-)
+-- local tasklist_buttons = gears.table.join(
+--     awful.button({}, 1, function(c)
+--         if c == client.focus then
+--             c.minimized = true
+--         else
+--             c:emit_signal('request::activate', 'tasklist', { raise = true })
+--         end
+--     end),
+--     awful.button({}, 3, function()
+--         awful.menu.client_list({ theme = { width = 250 } })
+--     end),
+--     awful.button({}, 4, function()
+--         awful.client.focus.byidx(1)
+--     end),
+--     awful.button({}, 5, function()
+--         awful.client.focus.byidx(-1)
+--     end)
+-- )
 
 awful.screen.connect_for_each_screen(function(s)
     -- Tags
@@ -200,28 +185,29 @@ awful.screen.connect_for_each_screen(function(s)
         end)
     ))
 
-    s.mytasklist = wrapper(
-        awful.widget.tasklist({
-            screen = s,
-            filter = awful.widget.tasklist.filter.currenttags,
-            buttons = tasklist_buttons,
-        })
-    )
+    -- Tasklist
+    -- s.mytasklist = wrapper(
+    --     awful.widget.tasklist({
+    --         screen = s,
+    --         filter = awful.widget.tasklist.filter.currenttags,
+    --         buttons = tasklist_buttons,
+    --     })
+    -- )
 
     -- Topbar setup
     s.padding = awful.wibar({
         screen = s,
-        height = 2 * theme.useless_gap,
+        height = 2 * beautiful.useless_gap,
         bg = '#00000000',
     })
     s.topbar = awful.wibar({
         screen = s,
         ontop = true,
         height = dpi(40),
-        width = s.geometry.width - 4 * theme.useless_gap,
-        fg = theme.fg_color,
-        bg = theme.bg_color,
-        opacity = theme.opacity,
+        width = s.geometry.width - 4 * beautiful.useless_gap,
+        fg = beautiful.fg_color,
+        bg = beautiful.bg_color,
+        opacity = beautiful.opacity,
     })
     s.topbar:setup({
         layout = wibox.layout.align.horizontal,
@@ -232,12 +218,14 @@ awful.screen.connect_for_each_screen(function(s)
             s.mytaglist,
             s.mypromptbox,
         },
-        s.mytasklist, -- Middle widget
+        wibox.container.place(
+            calendar, -- Middle widget
+            'center'
+        ),
         {
             -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
-            time,
             brightness,
             volume,
             battery,

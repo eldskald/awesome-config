@@ -1,105 +1,19 @@
--------------------------------------------------
--- Calendar Widget for Awesome Window Manager
--- Shows the current month and supports scroll up/down to switch month
--- More details could be found here:
--- https://github.com/streetturtle/awesome-wm-widgets/tree/master/calendar-widget
-
--- @author Pavel Makhov
--- @copyright 2019 Pavel Makhov
--------------------------------------------------
+-- This widget is originally done by streetturtle at
+-- https://github.com/streetturtle/awesome-wm-widgets
+--
+-- I modified it by removing features I didn't want and giving features
+-- I wanted, such as click outside to hide and opacity.
 
 local awful = require('awful')
 local beautiful = require('beautiful')
 local wibox = require('wibox')
 local gears = require('gears')
-local naughty = require('naughty')
+
+local click_to_hide = require('widgets.helpers.click_to_hide')
 
 local calendar_widget = {}
 
-local function worker(user_args)
-    local calendar_themes = {
-        nord = {
-            bg = '#2E3440',
-            fg = '#D8DEE9',
-            focus_date_bg = '#88C0D0',
-            focus_date_fg = '#000000',
-            weekend_day_bg = '#3B4252',
-            weekday_fg = '#88C0D0',
-            header_fg = '#E5E9F0',
-            border = '#4C566A',
-        },
-        outrun = {
-            bg = '#0d0221',
-            fg = '#D8DEE9',
-            focus_date_bg = '#650d89',
-            focus_date_fg = '#2de6e2',
-            weekend_day_bg = '#261447',
-            weekday_fg = '#2de6e2',
-            header_fg = '#f6019d',
-            border = '#261447',
-        },
-        dark = {
-            bg = '#000000',
-            fg = '#ffffff',
-            focus_date_bg = '#ffffff',
-            focus_date_fg = '#000000',
-            weekend_day_bg = '#444444',
-            weekday_fg = '#ffffff',
-            header_fg = '#ffffff',
-            border = '#333333',
-        },
-        light = {
-            bg = '#ffffff',
-            fg = '#000000',
-            focus_date_bg = '#000000',
-            focus_date_fg = '#ffffff',
-            weekend_day_bg = '#AAAAAA',
-            weekday_fg = '#000000',
-            header_fg = '#000000',
-            border = '#CCCCCC',
-        },
-        monokai = {
-            bg = '#272822',
-            fg = '#F8F8F2',
-            focus_date_bg = '#AE81FF',
-            focus_date_fg = '#ffffff',
-            weekend_day_bg = '#75715E',
-            weekday_fg = '#FD971F',
-            header_fg = '#F92672',
-            border = '#75715E',
-        },
-        naughty = {
-            bg = beautiful.notification_bg or beautiful.bg_normal,
-            fg = beautiful.notification_fg or beautiful.fg_normal,
-            focus_date_bg = beautiful.notification_fg or beautiful.fg_normal,
-            focus_date_fg = beautiful.notification_bg or beautiful.bg_normal,
-            weekend_day_bg = beautiful.bg_focus,
-            weekday_fg = beautiful.fg_normal,
-            header_fg = beautiful.fg_normal,
-            border = beautiful.border_normal,
-        },
-    }
-
-    local args = user_args or {}
-
-    if args.theme ~= nil and calendar_themes[args.theme] == nil then
-        naughty.notify({
-            preset = naughty.config.presets.critical,
-            title = 'Calendar Widget',
-            text = 'Theme "'
-                .. args.theme
-                .. '" not found, fallback to default',
-        })
-        args.theme = 'naughty'
-    end
-
-    local theme = args.theme or 'naughty'
-    local placement = args.placement or 'top'
-    local radius = args.radius or 8
-    local next_month_button = args.next_month_button or 4
-    local previous_month_button = args.previous_month_button or 5
-    local start_sunday = args.start_sunday or false
-
+local function calendar(placement)
     local styles = {}
     local function rounded_shape(size)
         return function(cr, width, height)
@@ -107,9 +21,21 @@ local function worker(user_args)
         end
     end
 
+    local calendar_theme = {
+        bg = beautiful.notification_bg,
+        fg = beautiful.notification_fg,
+        focus_date_bg = beautiful.notification_fg,
+        focus_date_fg = beautiful.notification_bg,
+        weekend_day_fg = beautiful.fg_focus,
+        weekday_fg = beautiful.fg_normal,
+        header_fg = beautiful.fg_normal,
+        border = beautiful.notificiation_border,
+        opacity = beautiful.notification_opacity
+    }
+
     styles.month = {
         padding = 4,
-        bg_color = calendar_themes[theme].bg,
+        bg_color = calendar_theme.bg,
         border_width = 0,
     }
 
@@ -121,8 +47,8 @@ local function worker(user_args)
     }
 
     styles.focus = {
-        fg_color = calendar_themes[theme].focus_date_fg,
-        bg_color = calendar_themes[theme].focus_date_bg,
+        fg_color = calendar_theme.focus_date_fg,
+        bg_color = calendar_theme.focus_date_bg,
         markup = function(t)
             return '<b>' .. t .. '</b>'
         end,
@@ -130,16 +56,16 @@ local function worker(user_args)
     }
 
     styles.header = {
-        fg_color = calendar_themes[theme].header_fg,
-        bg_color = calendar_themes[theme].bg,
+        fg_color = calendar_theme.header_fg,
+        bg_color = calendar_theme.bg,
         markup = function(t)
             return '<b>' .. t .. '</b>'
         end,
     }
 
     styles.weekday = {
-        fg_color = calendar_themes[theme].weekday_fg,
-        bg_color = calendar_themes[theme].bg,
+        fg_color = calendar_theme.weekday_fg,
+        bg_color = calendar_theme.bg,
         markup = function(t)
             return '<b>' .. t .. '</b>'
         end,
@@ -150,6 +76,10 @@ local function worker(user_args)
             flag = 'header'
         end
 
+        -- Initiate cell colors with non-weekends non-today colors
+        local final_bg = calendar_theme.bg
+        local final_fg = calendar_theme.fg
+
         -- highlight only today's day
         if flag == 'focus' then
             local today = os.date('*t')
@@ -157,21 +87,32 @@ local function worker(user_args)
                 flag = 'normal'
             end
         end
-
         local props = styles[flag] or {}
         if props.markup and widget.get_text and widget.set_markup then
             widget:set_markup(props.markup(widget:get_text()))
         end
-        -- Change bg color for weekends
+
+        -- Mark and color weekends
         local d = {
             year = date.year,
             month = (date.month or 1),
             day = (date.day or 1),
         }
         local weekday = tonumber(os.date('%w', os.time(d)))
-        local default_bg = (weekday == 0 or weekday == 6)
-                and calendar_themes[theme].weekend_day_bg
-            or calendar_themes[theme].bg
+        local is_weekend = (weekday == 0 or weekday == 6)
+        if is_weekend then
+            final_fg = calendar_theme.weekend_day_fg
+        end
+
+        -- Change bg and fg color to highlight today
+        if flag == 'focus' then
+            final_bg = calendar_theme.focus_date_bg
+            final_fg = calendar_theme.focus_date_fg
+            if is_weekend then
+                final_bg = calendar_theme.weekend_day_fg
+            end
+        end
+
         local ret = wibox.widget({
             {
                 {
@@ -183,10 +124,10 @@ local function worker(user_args)
                 widget = wibox.container.margin,
             },
             shape = props.shape,
-            shape_border_color = props.border_color or '#000000',
-            shape_border_width = props.border_width or 0,
-            fg = props.fg_color or calendar_themes[theme].fg,
-            bg = props.bg_color or default_bg,
+            shape_border_color = props.border_color,
+            shape_border_width = props.border_width,
+            fg = final_fg,
+            bg = final_bg,
             widget = wibox.container.background,
         })
 
@@ -198,30 +139,31 @@ local function worker(user_args)
         font = beautiful.get_font(),
         fn_embed = decorate_cell,
         long_weekdays = true,
-        start_sunday = start_sunday,
+        start_sunday = true,
         widget = wibox.widget.calendar.month,
     })
 
     local popup = awful.popup({
         ontop = true,
         visible = false,
-        shape = rounded_shape(radius),
+        shape = rounded_shape(8),
         offset = { y = 5 },
         border_width = 1,
-        border_color = calendar_themes[theme].border,
+        border_color = calendar_theme.border,
+        opacity = calendar_theme.opacity,
         widget = cal,
     })
 
     popup:buttons(
         awful.util.table.join(
-            awful.button({}, next_month_button, function()
+            awful.button({}, 4, function() -- Next month
                 local a = cal:get_date()
                 a.month = a.month + 1
                 cal:set_date(nil)
                 cal:set_date(a)
                 popup:set_widget(cal)
             end),
-            awful.button({}, previous_month_button, function()
+            awful.button({}, 5, function() -- Prev month
                 local a = cal:get_date()
                 a.month = a.month - 1
                 cal:set_date(nil)
@@ -276,15 +218,17 @@ local function worker(user_args)
         end
     end
 
-    popup:connect_signal('mouse::leave', function()
-        calendar_widget.toggle()
-    end)
+    click_to_hide.popup(popup, nil, true)
 
     return calendar_widget
 end
 
-return setmetatable(calendar_widget, {
-    __call = function(_, ...)
-        return worker(...)
-    end,
-})
+local textclock = wibox.widget.textclock()
+calendar('top_center')
+textclock:connect_signal('button::press', function(_, _, _, button)
+    if button == 1 then
+        calendar_widget.toggle()
+    end
+end)
+
+return textclock

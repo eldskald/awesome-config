@@ -47,13 +47,13 @@ theme.border_marked = theme.color_6
 theme.menu_submenu_icon = themes_path .. 'default/submenu.png'
 theme.menu_width = dpi(200)
 theme.menu_height = dpi(25)
-theme.menu_border_color = theme.color_1
+theme.menu_border_color = theme.border_normal
 theme.menu_border_width = 1
 
 theme.notification_font = theme.font
 theme.notification_bg = theme.bg_color
 theme.notification_fg = theme.fg_color
-theme.notification_border_color = theme.color_1
+theme.notification_border_color = theme.border_normal
 theme.notification_border_width = 1
 theme.notification_opacity = theme.opacity
 
