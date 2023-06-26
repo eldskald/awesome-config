@@ -26,11 +26,11 @@ local wrapper = function(widget)
     })
 
     background_widget:connect_signal('mouse::enter', function()
-        background_widget.bg = '#ffffff15'
+        background_widget:set_bg('#ffffff15')
     end)
 
     background_widget:connect_signal('mouse::leave', function()
-        background_widget.bg = '#ffffff00'
+        background_widget:set_bg('#ffffff00')
     end)
 
     -- Margins for the background containers

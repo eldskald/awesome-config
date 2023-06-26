@@ -13,51 +13,54 @@ local wrapper = require('widgets.helpers.wrapper')
 menubar.utils.terminal = defs.terminal
 
 -- Main menu widget
-local main_menu = wrapper(awful.widget.launcher({
-    image = beautiful.awesome_icon,
-    menu = awful.menu({
-        items = {
-            {
-                '  Open Terminal',
-                function()
-                    awful.spawn(defs.terminal)
-                end,
-            },
-            {
-                '󰘥  Keybindings',
-                function()
-                    hotkeys_popup.show_help(nil, awful.screen.focused())
-                end,
-            },
-            { '󱚋  Manual', defs.terminal .. ' -e man awesome' },
-            { '󰑓  Reload', awesome.restart },
-            {
-                '󰍃  Logout',
-                function()
-                    awesome.quit()
-                end,
-            },
-            {
-                '󰏤  Suspend',
-                function()
-                    os.execute('systemctl suspend')
-                end,
-            },
-            {
-                '  Restart',
-                function()
-                    os.execute('systemctl reboot')
-                end,
-            },
-            {
-                '  Power Off',
-                function()
-                    os.execute('systemctl poweroff')
-                end,
-            },
-        },
-    }),
-}))
+-- local main_menu = wrapper(awful.widget.launcher({
+--     image = beautiful.awesome_icon,
+--     menu = awful.menu({
+--         items = {
+--             {
+--                 '  Open Terminal',
+--                 function()
+--                     awful.spawn(defs.terminal)
+--                 end,
+--             },
+--             {
+--                 '󰘥  Keybindings',
+--                 function()
+--                     hotkeys_popup.show_help(nil, awful.screen.focused())
+--                 end,
+--             },
+--             { '󱚋  Manual', defs.terminal .. ' -e man awesome' },
+--             { '󰑓  Reload', awesome.restart },
+--             {
+--                 '󰍃  Logout',
+--                 function()
+--                     awesome.quit()
+--                 end,
+--             },
+--             {
+--                 '󰏤  Suspend',
+--                 function()
+--                     os.execute('systemctl suspend')
+--                 end,
+--             },
+--             {
+--                 '  Restart',
+--                 function()
+--                     os.execute('systemctl reboot')
+--                 end,
+--             },
+--             {
+--                 '  Power Off',
+--                 function()
+--                     os.execute('systemctl poweroff')
+--                 end,
+--             },
+--         },
+--     }),
+-- }))
+
+-- Power menu
+local power_menu = require('widgets.power-menu')
 
 -- Time widget
 local calendar = require('widgets.calendar')
@@ -165,7 +168,7 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            main_menu,
+            power_menu(),
             s.mytaglist,
             s.mypromptbox,
         },

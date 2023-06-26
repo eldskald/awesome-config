@@ -55,7 +55,6 @@ theme.notification_bg = theme.bg_color
 theme.notification_fg = theme.fg_color
 theme.notification_border_color = theme.border_normal
 theme.notification_border_width = 1
-theme.notification_opacity = theme.opacity
 
 theme.hotkeys_font = theme.font
 theme.hotkeys_description_font = theme.font
