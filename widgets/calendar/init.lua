@@ -9,6 +9,7 @@ local beautiful = require('beautiful')
 local wibox = require('wibox')
 local gears = require('gears')
 
+local wrapper = require('widgets.helpers.wrapper')
 local click_to_hide = require('widgets.helpers.click_to_hide')
 
 local calendar_widget = {}
@@ -29,7 +30,7 @@ local function calendar(placement)
         weekend_day_fg = beautiful.fg_focus,
         weekday_fg = beautiful.fg_normal,
         header_fg = beautiful.fg_normal,
-        border = beautiful.notificiation_border,
+        border = beautiful.notificiation_border_color,
         opacity = beautiful.notification_opacity,
     }
 
@@ -231,4 +232,4 @@ textclock:connect_signal('button::press', function(_, _, _, button)
     end
 end)
 
-return textclock
+return wrapper(textclock)

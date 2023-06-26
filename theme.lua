@@ -65,6 +65,8 @@ theme.hotkeys_opacity = theme.opacity
 theme.hotkeys_label_fg = theme.color_bg
 theme.hotkeys_modifiers_fg = theme.color_7
 
+theme.taglist_bg_focus = 'none'
+
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
 theme.taglist_squares_sel =

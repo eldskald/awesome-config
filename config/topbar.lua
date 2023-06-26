@@ -59,19 +59,8 @@ local main_menu = wrapper(awful.widget.launcher({
     }),
 }))
 
--- Keyboard map indicator and switcher
--- local keyboardlayout = wrapper(awful.widget.keyboardlayout())
-
 -- Time widget
 local calendar = require('widgets.calendar')
--- local calendar_widget = require('widgets.calendar-widget.calendar')
--- local time = wibox.widget.textclock()
--- calendar_widget('top_center')
--- time:connect_signal('button::press', function(_, _, _, button)
---     if button == 1 then
---         calendar_widget.toggle()
---     end
--- end)
 
 -- Battery widget
 local battery_widget = require('widgets.battery-widget.battery')
@@ -97,7 +86,7 @@ local brightness = wrapper(brightness_widget({
     step = 2,
 }))
 
--- Create a wibox for each screen and add it
+-- Tag list widget mouse controls
 local taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)
         t:view_only()
@@ -114,36 +103,17 @@ local taglist_buttons = gears.table.join(
         end
     end),
     awful.button({}, 4, function(t)
-        awful.tag.viewnext(t.screen)
+        awful.tag.viewprev(t.screen)
     end),
     awful.button({}, 5, function(t)
-        awful.tag.viewprev(t.screen)
+        awful.tag.viewnext(t.screen)
     end)
 )
-
--- local tasklist_buttons = gears.table.join(
---     awful.button({}, 1, function(c)
---         if c == client.focus then
---             c.minimized = true
---         else
---             c:emit_signal('request::activate', 'tasklist', { raise = true })
---         end
---     end),
---     awful.button({}, 3, function()
---         awful.menu.client_list({ theme = { width = 250 } })
---     end),
---     awful.button({}, 4, function()
---         awful.client.focus.byidx(1)
---     end),
---     awful.button({}, 5, function()
---         awful.client.focus.byidx(-1)
---     end)
--- )
 
 awful.screen.connect_for_each_screen(function(s)
     -- Tags
     awful.tag(
-        { '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+        { ' 1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 6 ', ' 7 ', ' 8 ', ' 9 ' },
         s,
         awful.layout.layouts[1]
     )
@@ -172,15 +142,6 @@ awful.screen.connect_for_each_screen(function(s)
             awful.layout.inc(-1)
         end)
     ))
-
-    -- Tasklist
-    -- s.mytasklist = wrapper(
-    --     awful.widget.tasklist({
-    --         screen = s,
-    --         filter = awful.widget.tasklist.filter.currenttags,
-    --         buttons = tasklist_buttons,
-    --     })
-    -- )
 
     -- Topbar setup
     s.padding = awful.wibar({
