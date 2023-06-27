@@ -16,8 +16,6 @@
 -- again to retry but the new one on awesome-git is said to work perfectly.
 -- I'll change versions once I swap to arch.
 
-local capi = { button = button, mouse = mouse }
-
 local function click_to_hide(widget, hide_fct)
     only_outside = only_outside or false
 
@@ -25,12 +23,17 @@ local function click_to_hide(widget, hide_fct)
         widget.visible = false
     end
 
-    -- when the widget is visible, we hide it on button press
+    local hide = function(i)
+        if i.button == 1 then
+            hide_fct()
+        end
+    end
+
     widget:connect_signal('property::visible', function(w)
         if not w.visible then
-            capi.button.disconnect_signal('press', hide_fct)
+            button.disconnect_signal('press', hide)
         else
-            capi.button.connect_signal('press', hide_fct)
+            button.connect_signal('press', hide)
         end
     end)
 end

@@ -26,7 +26,7 @@ local wrapper = function(widget)
     })
 
     background_widget:connect_signal('mouse::enter', function()
-        background_widget:set_bg('#ffffff15')
+        background_widget:set_bg(beautiful.highlight)
     end)
 
     background_widget:connect_signal('mouse::leave', function()

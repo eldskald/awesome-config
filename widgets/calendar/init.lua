@@ -31,7 +31,6 @@ local function calendar(placement)
         weekday_fg = beautiful.fg_normal,
         header_fg = beautiful.fg_normal,
         border = beautiful.notificiation_border_color,
-        opacity = beautiful.notification_opacity,
     }
 
     styles.month = {
@@ -78,7 +77,7 @@ local function calendar(placement)
         end
 
         -- Initiate cell colors with non-weekends non-today colors
-        local final_bg = calendar_theme.bg
+        local final_bg = 'none'
         local final_fg = calendar_theme.fg
 
         -- highlight only today's day
@@ -148,10 +147,10 @@ local function calendar(placement)
         ontop = true,
         visible = false,
         shape = rounded_shape(8),
-        offset = { y = 5 },
-        border_width = 1,
+        offset = { y = 50 },
+        border_width = 0,
         border_color = calendar_theme.border,
-        opacity = calendar_theme.opacity,
+        bg = calendar_theme.bg,
         widget = cal,
     })
 
@@ -159,14 +158,14 @@ local function calendar(placement)
         awful.util.table.join(
             awful.button({}, 4, function() -- Next month
                 local a = cal:get_date()
-                a.month = a.month + 1
+                a.month = a.month - 1
                 cal:set_date(nil)
                 cal:set_date(a)
                 popup:set_widget(cal)
             end),
             awful.button({}, 5, function() -- Prev month
                 local a = cal:get_date()
-                a.month = a.month - 1
+                a.month = a.month + 1
                 cal:set_date(nil)
                 cal:set_date(a)
                 popup:set_widget(cal)
@@ -219,7 +218,7 @@ local function calendar(placement)
         end
     end
 
-    click_to_hide.popup(popup, nil)
+    click_to_hide.popup(popup, calendar_widget.toggle)
 
     return calendar_widget
 end

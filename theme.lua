@@ -5,44 +5,71 @@ local dpi = xresources.apply_dpi
 local gfs = require('gears.filesystem')
 local themes_path = gfs.get_themes_dir()
 
+local hex_digits = {
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+}
+
+local unit_to_hex = function(num)
+    local first_digit = math.floor((num * 255) / 16)
+    local second_digit = math.floor((num * 255) % 16)
+    return hex_digits[second_digit + 1] .. hex_digits[first_digit + 1]
+end
+
 local theme = {}
 
 -- Colorscheme
 -- TokyoNight_Night
 theme.bg_color = '#1a1b26'
 theme.fg_color = '#c0caf5'
-theme.color_1 = '#414868'
-theme.color_2 = '#f7768e'
-theme.color_3 = '#9ece6a'
-theme.color_4 = '#e0af68'
-theme.color_5 = '#7aa2f7'
-theme.color_6 = '#bb9af7'
-theme.color_7 = '#7dcfff'
-theme.color_8 = '#73daca'
+theme.high_1 = '#73daca'
+theme.high_2 = '#7dcfff'
+theme.high_3 = '#9ece6a'
+theme.high_4 = '#e0af68'
+theme.low_1 = '#bb9af7'
+theme.low_2 = '#f7768e'
+theme.low_3 = '#7aa2f7'
+theme.low_4 = '#414868'
+
+theme.highlight = '#ffffff15'
+
+theme.bg_opacity = 0.8
+theme.useless_gap = dpi(8)
+theme.gap_single_client = true
 
 theme.font_size = '14'
 theme.font_family = 'TerminessTTF Nerd Font'
 theme.font = theme.font_family .. ' ' .. theme.font_size
 
-theme.bg_normal = theme.bg_color
-theme.bg_focus = theme.bg_color
-theme.bg_urgent = theme.bg_color
-theme.bg_minimize = theme.bg_color
-theme.bg_systray = theme.bg_color
-theme.opacity = 0.8
+theme.bg_normal = theme.bg_color .. unit_to_hex(theme.bg_opacity)
+theme.bg_focus = theme.bg_color .. unit_to_hex(theme.bg_opacity)
+theme.bg_urgent = theme.bg_color .. unit_to_hex(theme.bg_opacity)
+theme.bg_minimize = theme.bg_color .. unit_to_hex(theme.bg_opacity)
+theme.bg_systray = theme.bg_color .. unit_to_hex(theme.bg_opacity)
 
 theme.fg_normal = theme.fg_color
-theme.fg_focus = theme.color_8
-theme.fg_urgent = theme.color_2
+theme.fg_focus = theme.high_1
+theme.fg_urgent = theme.low_2
 theme.fg_minimize = theme.fg_color
 
-theme.useless_gap = dpi(8)
-theme.gap_single_client = true
-
 theme.border_width = 0
-theme.border_normal = theme.color_1
-theme.border_focus = theme.color_8
-theme.border_marked = theme.color_6
+theme.border_normal = theme.low_4
+theme.border_focus = theme.high_2
+theme.border_marked = theme.low_1
 
 theme.menu_submenu_icon = themes_path .. 'default/submenu.png'
 theme.menu_width = dpi(200)
@@ -51,18 +78,16 @@ theme.menu_border_color = theme.border_normal
 theme.menu_border_width = 1
 
 theme.notification_font = theme.font
-theme.notification_bg = theme.bg_color
-theme.notification_fg = theme.fg_color
+theme.notification_bg = theme.bg_normal
+theme.notification_fg = theme.fg_normal
 theme.notification_border_color = theme.border_normal
 theme.notification_border_width = 1
 
 theme.hotkeys_font = theme.font
 theme.hotkeys_description_font = theme.font
-theme.hotkeys_bg = theme.bg_color
-theme.hotkeys_fg = theme.fg_color
-theme.hotkeys_opacity = theme.opacity
-theme.hotkeys_label_fg = theme.color_bg
-theme.hotkeys_modifiers_fg = theme.color_7
+theme.hotkeys_bg = theme.bg_normal
+theme.hotkeys_fg = theme.fg_normal
+theme.hotkeys_modifiers_fg = theme.low_1
 
 theme.taglist_bg_focus = 'none'
 
@@ -120,7 +145,7 @@ theme.titlebar_maximized_button_normal_active = themes_path
 theme.titlebar_maximized_button_focus_active = themes_path
     .. 'default/titlebar/maximized_focus_active.png'
 
-theme.wallpaper = themes_path .. 'default/background.png'
+theme.wallpaper = os.getenv('HOME') .. '/Pictures/Wallpapers/hollow-knight.jpg'
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path .. 'default/layouts/fairhw.png'

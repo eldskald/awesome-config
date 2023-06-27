@@ -3,7 +3,6 @@ local gears = require('gears')
 local wibox = require('wibox')
 local beautiful = require('beautiful')
 local menubar = require('menubar')
-local hotkeys_popup = require('awful.hotkeys_popup')
 local dpi = beautiful.xresources.apply_dpi
 
 local defs = require('config.defs')
@@ -11,53 +10,6 @@ local defs = require('config.defs')
 local wrapper = require('widgets.helpers.wrapper')
 
 menubar.utils.terminal = defs.terminal
-
--- Main menu widget
--- local main_menu = wrapper(awful.widget.launcher({
---     image = beautiful.awesome_icon,
---     menu = awful.menu({
---         items = {
---             {
---                 '  Open Terminal',
---                 function()
---                     awful.spawn(defs.terminal)
---                 end,
---             },
---             {
---                 '󰘥  Keybindings',
---                 function()
---                     hotkeys_popup.show_help(nil, awful.screen.focused())
---                 end,
---             },
---             { '󱚋  Manual', defs.terminal .. ' -e man awesome' },
---             { '󰑓  Reload', awesome.restart },
---             {
---                 '󰍃  Logout',
---                 function()
---                     awesome.quit()
---                 end,
---             },
---             {
---                 '󰏤  Suspend',
---                 function()
---                     os.execute('systemctl suspend')
---                 end,
---             },
---             {
---                 '  Restart',
---                 function()
---                     os.execute('systemctl reboot')
---                 end,
---             },
---             {
---                 '  Power Off',
---                 function()
---                     os.execute('systemctl poweroff')
---                 end,
---             },
---         },
---     }),
--- }))
 
 -- Power menu
 local power_menu = require('widgets.power-menu')
@@ -116,7 +68,7 @@ local taglist_buttons = gears.table.join(
 awful.screen.connect_for_each_screen(function(s)
     -- Tags
     awful.tag(
-        { ' 1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 6 ', ' 7 ', ' 8 ', ' 9 ' },
+        { '1', '2', '3', '4', '5', '6', '7', '8', '9' },
         s,
         awful.layout.layouts[1]
     )
@@ -159,9 +111,8 @@ awful.screen.connect_for_each_screen(function(s)
         width = s.geometry.width - 4 * beautiful.useless_gap,
         y = 2 * beautiful.useless_gap,
         x = 2 * beautiful.useless_gap,
-        fg = beautiful.fg_color,
-        bg = beautiful.bg_color,
-        opacity = beautiful.opacity,
+        fg = beautiful.fg_normal,
+        bg = beautiful.bg_normal,
     })
     s.topbar:setup({
         layout = wibox.layout.align.horizontal,

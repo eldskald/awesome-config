@@ -114,15 +114,15 @@ local function worker(user_args)
                 margins = 8,
                 layout = wibox.container.margin,
             },
-            bg = beautiful.bg_normal,
+            bg = 'none',
             widget = wibox.container.background,
         })
 
         row:connect_signal('mouse::enter', function(c)
-            c:set_bg('#ffffff15')
+            c:set_bg(beautiful.highlight)
         end)
         row:connect_signal('mouse::leave', function(c)
-            c:set_bg('#ffffff00')
+            c:set_bg('none')
         end)
 
         local old_cursor, old_wibox
@@ -151,8 +151,12 @@ local function worker(user_args)
 
     logout_menu_widget:connect_signal('button::press', function(_, _, _, button)
         if button == 1 then
-            popup.visible = true
-            popup:move_next_to(mouse.current_widget_geometry)
+            if not popup.visible then
+                popup.visible = not popup.visible
+                popup:move_next_to(mouse.current_widget_geometry)
+            else
+                popup.visible = false
+            end
         end
     end)
 
