@@ -37,7 +37,6 @@ local popup = awful.popup({
         gears.shape.rounded_rect(cr, width, height, 4)
     end,
     border_width = 0,
-    border_color = beautiful.border_normal,
     maximum_width = 400,
     offset = { y = 5 },
     widget = {},

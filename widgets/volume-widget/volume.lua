@@ -15,6 +15,8 @@ local beautiful = require('beautiful')
 local watch = require('awful.widget.watch')
 local utils = require('widgets.volume-widget.utils')
 
+local click_to_hide = require('widgets.helpers.click_to_hide')
+
 local LIST_DEVICES_CMD = [[sh -c "pacmd list-sinks; pacmd list-sources"]]
 local function GET_VOLUME_CMD(device)
     return 'amixer -D ' .. device .. ' sget Master'
@@ -49,16 +51,13 @@ local popup = awful.popup({
     ontop = true,
     visible = false,
     shape = gears.shape.rounded_rect,
-    border_width = 1,
+    border_width = 0,
     border_color = beautiful.border_normal,
     maximum_width = 400,
-    offset = { y = 5 },
     widget = {},
 })
 
-popup:connect_signal('mouse::leave', function()
-    popup.visible = false
-end)
+click_to_hide.popup(popup)
 
 local function build_main_line(device)
     if
@@ -123,15 +122,15 @@ local function build_rows(devices, on_checkbox_click, device_type)
                 margins = 4,
                 layout = wibox.container.margin,
             },
-            bg = beautiful.bg_normal,
+            bg = 'none',
             widget = wibox.container.background,
         })
 
         row:connect_signal('mouse::enter', function(c)
-            c:set_bg(beautiful.bg_focus)
+            c:set_bg(beautiful.highlight)
         end)
         row:connect_signal('mouse::leave', function(c)
-            c:set_bg(beautiful.bg_normal)
+            c:set_bg('none')
         end)
 
         local old_cursor, old_wibox
@@ -173,7 +172,7 @@ local function build_header_row(text)
             align = 'center',
             widget = wibox.widget.textbox,
         },
-        bg = beautiful.bg_normal,
+        bg = 'none',
         widget = wibox.container.background,
     })
 end
@@ -201,7 +200,11 @@ local function rebuild_popup()
             end, 'source')
         )
 
-        popup:setup(rows)
+        popup:setup({
+            rows,
+            margins = 8,
+            widget = wibox.container.margin,
+        })
     end)
 end
 
@@ -259,12 +262,12 @@ local function worker(user_args)
 
     volume.widget:buttons(awful.util.table.join(
         awful.button({}, 3, function()
-            if popup.visible then
-                popup.visible = not popup.visible
-            else
-                rebuild_popup()
-                popup:move_next_to(mouse.current_widget_geometry)
-            end
+            rebuild_popup()
+            awful.placement.top_right(popup, {
+                margins = { top = 50, right = 2 * beautiful.useless_gap },
+                parent = awful.screen.focused(),
+            })
+            popup.visible = not popup.visible
         end),
         awful.button({}, 4, function()
             volume:inc()

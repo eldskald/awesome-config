@@ -98,13 +98,12 @@ awful.screen.connect_for_each_screen(function(s)
         end)
     ))
 
-    -- Topbar setup
-    s.padding = awful.wibar({
-        screen = s,
-        height = 2 * beautiful.useless_gap,
-        bg = '#00000000',
-    })
-    s.topbar = awful.wibar({
+    -- Padding to fit top bar, which is not a wibar so it won't change
+    -- the screen's workarea.
+    s.padding = { top = dpi(40) + 2 * beautiful.useless_gap }
+
+    -- Top bar.
+    s.topbar = wibox({
         screen = s,
         ontop = true,
         height = dpi(40),
@@ -115,26 +114,34 @@ awful.screen.connect_for_each_screen(function(s)
         bg = beautiful.bg_normal,
     })
     s.topbar:setup({
-        layout = wibox.layout.align.horizontal,
+        layout = wibox.layout.flex.horizontal,
         {
-            -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            power_menu(),
-            s.mytaglist,
-            s.mypromptbox,
+            {
+                layout = wibox.layout.fixed.horizontal,
+                power_menu(),
+                s.mytaglist,
+                s.mypromptbox,
+            },
+            widget = wibox.container.place,
+            halign = 'left',
         },
-        wibox.container.place(
-            calendar, -- Middle widget
-            'center'
-        ),
         {
-            -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            wibox.widget.systray(),
-            brightness,
-            volume,
-            battery,
-            s.mylayoutbox,
+            calendar,
+            widget = wibox.container.place,
+            halign = 'center',
+        },
+        {
+            {
+                layout = wibox.layout.fixed.horizontal,
+                wibox.widget.systray(),
+                brightness,
+                volume,
+                battery,
+                s.mylayoutbox,
+            },
+            widget = wibox.container.place,
+            halign = 'right',
         },
     })
+    s.topbar.visible = true
 end)

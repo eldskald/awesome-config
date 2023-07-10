@@ -14,7 +14,7 @@ local click_to_hide = require('widgets.helpers.click_to_hide')
 
 local calendar_widget = {}
 
-local function calendar(placement)
+local function calendar()
     local styles = {}
     local function rounded_shape(size)
         return function(cr, width, height)
@@ -182,38 +182,10 @@ local function calendar(placement)
             popup:set_widget(cal)
             popup.visible = not popup.visible
         else
-            if placement == 'top' then
-                awful.placement.top(
-                    popup,
-                    { margins = { top = 30 }, parent = awful.screen.focused() }
-                )
-            elseif placement == 'top_right' then
-                awful.placement.top_right(popup, {
-                    margins = { top = 30, right = 10 },
-                    parent = awful.screen.focused(),
-                })
-            elseif placement == 'top_left' then
-                awful.placement.top_left(popup, {
-                    margins = { top = 30, left = 10 },
-                    parent = awful.screen.focused(),
-                })
-            elseif placement == 'bottom_right' then
-                awful.placement.bottom_right(popup, {
-                    margins = { bottom = 30, right = 10 },
-                    parent = awful.screen.focused(),
-                })
-            elseif placement == 'bottom_left' then
-                awful.placement.bottom_left(popup, {
-                    margins = { bottom = 30, left = 10 },
-                    parent = awful.screen.focused(),
-                })
-            else
-                awful.placement.top(
-                    popup,
-                    { margins = { top = 30 }, parent = awful.screen.focused() }
-                )
-            end
-
+            awful.placement.top(
+                popup,
+                { margins = { top = 50 }, parent = awful.screen.focused() }
+            )
             popup.visible = true
         end
     end
@@ -224,7 +196,7 @@ local function calendar(placement)
 end
 
 local textclock = wibox.widget.textclock()
-calendar('top_center')
+calendar()
 textclock:connect_signal('button::press', function(_, _, _, button)
     if button == 1 then
         calendar_widget.toggle()
