@@ -104,6 +104,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Top bar.
     s.topbar = wibox({
+        visible = true,
         screen = s,
         ontop = true,
         height = dpi(40),
@@ -143,5 +144,4 @@ awful.screen.connect_for_each_screen(function(s)
             halign = 'right',
         },
     })
-    s.topbar.visible = true
 end)

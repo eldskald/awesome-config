@@ -55,6 +55,8 @@ local popup = awful.popup({
     border_color = beautiful.border_normal,
     maximum_width = 400,
     widget = {},
+    y = 50,
+    x = awful.screen.focused().geometry.width - 4 * beautiful.useless_gap - 400,
 })
 
 click_to_hide.popup(popup)
@@ -180,11 +182,9 @@ end
 local function rebuild_popup()
     spawn.easy_async(LIST_DEVICES_CMD, function(stdout)
         local sinks, sources = utils.extract_sinks_and_sources(stdout)
-
         for i = 0, #rows do
             rows[i] = nil
         end
-
         table.insert(rows, build_header_row('SINKS'))
         table.insert(
             rows,
@@ -199,7 +199,10 @@ local function rebuild_popup()
                 rebuild_popup()
             end, 'source')
         )
-
+        -- awful.placement.top_right(popup, {
+        --     margins = { top = 50, right = 4 * beautiful.useless_gap },
+        --     parent = awful.screen.focused(),
+        -- })
         popup:setup({
             rows,
             margins = 8,
@@ -263,10 +266,6 @@ local function worker(user_args)
     volume.widget:buttons(awful.util.table.join(
         awful.button({}, 3, function()
             rebuild_popup()
-            awful.placement.top_right(popup, {
-                margins = { top = 50, right = 2 * beautiful.useless_gap },
-                parent = awful.screen.focused(),
-            })
             popup.visible = not popup.visible
         end),
         awful.button({}, 4, function()
