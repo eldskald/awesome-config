@@ -9,7 +9,7 @@ local gears = require('gears')
 local beautiful = require('beautiful')
 
 local wrapper = require('widgets.helpers.wrapper')
-local click_to_hide = require('widgets.helpers.click_to_hide')
+local click_to_hide = require('widgets.helpers.click-to-hide')
 
 local DIR = gears.filesystem.get_configuration_dir()
 local ICON_DIR = DIR .. 'widgets/power-menu/icons/'

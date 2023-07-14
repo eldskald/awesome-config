@@ -10,7 +10,7 @@ local wibox = require('wibox')
 local gears = require('gears')
 
 local wrapper = require('widgets.helpers.wrapper')
-local click_to_hide = require('widgets.helpers.click_to_hide')
+local click_to_hide = require('widgets.helpers.click-to-hide')
 
 local calendar_widget = {}
 

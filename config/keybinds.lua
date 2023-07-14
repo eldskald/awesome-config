@@ -6,6 +6,7 @@ local hotkeys_popup = require('awful.hotkeys_popup')
 local dpi = beautiful.xresources.apply_dpi
 
 local defs = require('config.defs')
+local right_click_menu = require('config.right-click-menu')
 
 local keybinds = {}
 
@@ -120,7 +121,7 @@ keybinds.globalkeys = gears.table.join(
         awful.spawn(defs.code)
     end, { description = 'launch code console', group = 'launcher' }),
     awful.key({ defs.modkey }, 'x', function()
-        awful.spawn(defs.notes)
+        awful.spawn(defs.text_editor)
     end, { description = 'launch text editor', group = 'launcher' }),
     awful.key({ defs.modkey }, 'g', function()
         awful.spawn(defs.games)
@@ -324,6 +325,7 @@ keybinds.globalbuttons = gears.table.join(
     awful.button({}, 1, function()
         naughty.destroy_all_notifications()
     end),
+    awful.button({}, 3, right_click_menu),
     awful.button({}, 4, awful.tag.viewnext),
     awful.button({}, 5, awful.tag.viewprev)
 )

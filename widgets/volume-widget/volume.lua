@@ -15,7 +15,7 @@ local beautiful = require('beautiful')
 local watch = require('awful.widget.watch')
 local utils = require('widgets.volume-widget.utils')
 
-local click_to_hide = require('widgets.helpers.click_to_hide')
+local click_to_hide = require('widgets.helpers.click-to-hide')
 
 local LIST_DEVICES_CMD = [[sh -c "pacmd list-sinks; pacmd list-sources"]]
 local function GET_VOLUME_CMD(device)
@@ -199,10 +199,6 @@ local function rebuild_popup()
                 rebuild_popup()
             end, 'source')
         )
-        -- awful.placement.top_right(popup, {
-        --     margins = { top = 50, right = 4 * beautiful.useless_gap },
-        --     parent = awful.screen.focused(),
-        -- })
         popup:setup({
             rows,
             margins = 8,

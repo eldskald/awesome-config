@@ -1,15 +1,11 @@
-local terminal = 'wezterm'
-local editor = 'nvim'
-
-local defs = {
-    terminal = terminal,
-    editor = editor,
+return {
+    terminal = 'wezterm',
+    editor = 'nvim',
     modkey = 'Mod4',
     web_browser = 'brave-browser',
-    notes = terminal .. ' ' .. editor .. ' -c "bd"',
-    code = terminal .. ' lua',
+    file_browser = 'wezterm -e nnn',
+    text_editor = 'wezterm -e nvim -c "bd"',
+    code = 'wezterm -e lua',
     games = 'steam',
     screenshot_tool = 'maim -s | xclip -selection clipboard -t image/png',
 }
-
-return defs
