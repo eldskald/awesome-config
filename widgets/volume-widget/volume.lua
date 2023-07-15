@@ -121,7 +121,7 @@ local function build_rows(devices, on_checkbox_click, device_type)
                     spacing = 8,
                     layout = wibox.layout.align.horizontal,
                 },
-                margins = 4,
+                margins = 8,
                 layout = wibox.container.margin,
             },
             bg = 'none',
@@ -170,9 +170,13 @@ end
 local function build_header_row(text)
     return wibox.widget({
         {
-            markup = '<b>' .. text .. '</b>',
-            align = 'center',
-            widget = wibox.widget.textbox,
+            {
+                markup = '<b>' .. text .. '</b>',
+                align = 'center',
+                widget = wibox.widget.textbox,
+            },
+            margins = 8,
+            widget = wibox.container.margin,
         },
         bg = 'none',
         widget = wibox.container.background,
@@ -199,11 +203,7 @@ local function rebuild_popup()
                 rebuild_popup()
             end, 'source')
         )
-        popup:setup({
-            rows,
-            margins = 8,
-            widget = wibox.container.margin,
-        })
+        popup:setup(rows)
     end)
 end
 
