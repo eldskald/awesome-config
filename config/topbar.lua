@@ -98,16 +98,19 @@ awful.screen.connect_for_each_screen(function(s)
         end)
     ))
 
+    -- Height of the topbar
+    local topbar_height = dpi(44)
+
     -- Padding to fit top bar, which is not a wibar so it won't change
     -- the screen's workarea.
-    s.padding = { top = dpi(40) + 2 * beautiful.useless_gap }
+    s.padding = { top = topbar_height + 2 * beautiful.useless_gap }
 
     -- Top bar.
     s.topbar = wibox({
         visible = true,
         screen = s,
         ontop = true,
-        height = dpi(40),
+        height = topbar_height,
         width = s.geometry.width - 4 * beautiful.useless_gap,
         y = 2 * beautiful.useless_gap,
         x = 2 * beautiful.useless_gap,

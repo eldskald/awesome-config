@@ -1,7 +1,8 @@
 -- Original by streetturtle at
 -- https://github.com/streetturtle/awesome-wm-widgets/tree/master/logout-menu-widget
 --
--- I slightly modified it to add untoggling by clicking away.
+-- I slightly modified it to add untoggling by clicking away and it's
+-- looks and position.
 
 local awful = require('awful')
 local wibox = require('wibox')
@@ -11,15 +12,13 @@ local beautiful = require('beautiful')
 local wrapper = require('widgets.helpers.wrapper')
 local click_to_hide = require('widgets.helpers.click-to-hide')
 
-local DIR = gears.filesystem.get_configuration_dir()
-local ICON_DIR = DIR .. 'widgets/power-menu/icons/'
-
 local logout_menu_widget = wibox.widget({
     {
         {
-            image = ICON_DIR .. 'power_w.svg',
-            resize = true,
-            widget = wibox.widget.imagebox,
+            text = ' ',
+            font = beautiful.font,
+            align = 'center',
+            widget = wibox.widget.textbox,
         },
         margins = 4,
         layout = wibox.container.margin,
@@ -38,58 +37,49 @@ local popup = awful.popup({
     end,
     border_width = 0,
     maximum_width = 400,
-    offset = { y = 5 },
     widget = {},
+    y = 50,
+    x = 4 * beautiful.useless_gap,
 })
 
-local function worker(user_args)
+local function worker()
     local rows = { layout = wibox.layout.fixed.vertical }
-
-    local args = user_args or {}
-
-    local font = args.font or beautiful.font
-
-    local onlogout = args.onlogout or function()
-        awesome.quit()
-    end
-    local onlock = args.onlock
-        or function()
-            awful.spawn.with_shell('i3lock')
-        end
-    local onreboot = args.onreboot
-        or function()
-            awful.spawn.with_shell('reboot')
-        end
-    local onsuspend = args.onsuspend
-        or function()
-            awful.spawn.with_shell('systemctl suspend')
-        end
-    local onpoweroff = args.onpoweroff
-        or function()
-            awful.spawn.with_shell('shutdown now')
-        end
 
     local menu_items = {
         {
-            name = 'Log out',
-            icon_name = 'log-out.svg',
-            command = onlogout,
-        },
-        { name = 'Lock', icon_name = 'lock.svg', command = onlock },
-        {
-            name = 'Reboot',
-            icon_name = 'refresh-cw.svg',
-            command = onreboot,
+            icon = '󰍃 ',
+            label = 'Log out',
+            command = function()
+                awesome.quit()
+            end,
         },
         {
-            name = 'Suspend',
-            icon_name = 'moon.svg',
-            command = onsuspend,
+            icon = ' ',
+            label = 'Lock',
+            command = function()
+                awful.spawn.with_shell('i3lock')
+            end,
         },
         {
-            name = 'Power off',
-            icon_name = 'power.svg',
-            command = onpoweroff,
+            icon = ' ',
+            label = 'Suspend',
+            command = function()
+                awful.spawn.with_shell('systemctl suspend')
+            end,
+        },
+        {
+            icon = ' ',
+            label = 'Reboot',
+            command = function()
+                awful.spawn.with_shell('reboot')
+            end,
+        },
+        {
+            icon = '󰤆 ',
+            label = 'Power off',
+            command = function()
+                awful.spawn.with_shell('systemctl poweroff')
+            end,
         },
     }
 
@@ -98,16 +88,17 @@ local function worker(user_args)
             {
                 {
                     {
-                        image = ICON_DIR .. item.icon_name,
-                        resize = false,
-                        widget = wibox.widget.imagebox,
-                    },
-                    {
-                        text = item.name,
-                        font = font,
+                        text = item.icon,
+                        font = beautiful.font,
+                        forced_width = 40,
+                        align = 'center',
                         widget = wibox.widget.textbox,
                     },
-                    spacing = 12,
+                    {
+                        text = item.label,
+                        font = beautiful.font,
+                        widget = wibox.widget.textbox,
+                    },
                     layout = wibox.layout.fixed.horizontal,
                 },
                 margins = 8,
@@ -116,14 +107,12 @@ local function worker(user_args)
             bg = 'none',
             widget = wibox.container.background,
         })
-
         row:connect_signal('mouse::enter', function(c)
             c:set_bg(beautiful.highlight)
         end)
         row:connect_signal('mouse::leave', function(c)
             c:set_bg('none')
         end)
-
         local old_cursor, old_wibox
         row:connect_signal('mouse::enter', function()
             local wb = mouse.current_wibox
@@ -136,26 +125,20 @@ local function worker(user_args)
                 old_wibox = nil
             end
         end)
-
         row:buttons(awful.util.table.join(awful.button({}, 1, function()
             popup.visible = not popup.visible
             item.command()
         end)))
-
         table.insert(rows, row)
     end
+
     popup:setup(rows)
 
     click_to_hide.popup(popup, nil)
 
     logout_menu_widget:connect_signal('button::press', function(_, _, _, button)
         if button == 1 then
-            if not popup.visible then
-                popup.visible = not popup.visible
-                popup:move_next_to(mouse.current_widget_geometry)
-            else
-                popup.visible = false
-            end
+            popup.visible = not popup.visible
         end
     end)
 
