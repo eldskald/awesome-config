@@ -2,6 +2,7 @@ local awful = require('awful')
 local wibox = require('wibox')
 local gears = require('gears')
 local beautiful = require('beautiful')
+local hotkeys_popup = require('awful.hotkeys_popup')
 
 local defs = require('config.defs')
 local click_to_hide = require('widgets.helpers.click-to-hide')
@@ -20,6 +21,13 @@ local popup = awful.popup({
 local rows = { layout = wibox.layout.fixed.vertical }
 
 local menu_items = {
+    {
+        icon = '󰘥 ',
+        label = 'Show hotkeys',
+        command = function()
+            hotkeys_popup.show_help()
+        end,
+    },
     {
         icon = ' ',
         label = 'Launch terminal',
@@ -88,14 +96,12 @@ for _, item in ipairs(menu_items) do
         bg = 'none',
         widget = wibox.container.background,
     })
-
     row:connect_signal('mouse::enter', function(c)
         c:set_bg(beautiful.highlight)
     end)
     row:connect_signal('mouse::leave', function(c)
         c:set_bg('none')
     end)
-
     local old_cursor, old_wibox
     row:connect_signal('mouse::enter', function()
         local wb = mouse.current_wibox
@@ -108,12 +114,10 @@ for _, item in ipairs(menu_items) do
             old_wibox = nil
         end
     end)
-
     row:buttons(awful.util.table.join(awful.button({}, 1, function()
         popup.visible = false
         item.command()
     end)))
-
     table.insert(rows, row)
 end
 
